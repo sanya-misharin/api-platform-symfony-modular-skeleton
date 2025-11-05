@@ -1,0 +1,3 @@
+# Keep migrations folder but ignore all migrations
+*
+!.gitkeep
