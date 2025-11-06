@@ -42,7 +42,6 @@
         "rector/rector": "^1.0",
         "roave/security-advisories": "dev-latest",
         "symfony/debug-bundle": "^7.3",
-        "symfony/monolog-bundle": "^3.10",
         "symfony/phpunit-bridge": "^7.3",
         "symfony/var-dumper": "~7.2.0",
         "symfony/web-profiler-bundle": "^7.3"
