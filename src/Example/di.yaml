@@ -4,6 +4,6 @@ services:
         autoconfigure: true
 
     App\Example\:
-        resource: '../'
+        resource: './'
         exclude:
-            - '../Entity/'
+            - './Entity/'
