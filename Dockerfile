@@ -27,9 +27,9 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Supervisor setup
-RUN apt-get update && apt-get install -y --no-install-recommends supervisor
-RUN mkdir -p /var/log/supervisor
-RUN mkdir -p /etc/supervisor.d
+RUN apt-get update && apt-get install -y --no-install-recommends supervisor && \
+	rm -rf /var/lib/apt/lists/*
+RUN mkdir -p /var/log/supervisor /etc/supervisor.d
 COPY --link docker/supervisor/supervisord.conf /etc/supervisord.conf
 
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
