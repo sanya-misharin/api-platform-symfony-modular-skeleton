@@ -1,6 +1,7 @@
 # API Platform + Symfony Modular Skeleton
 
-🚀 Production-ready starter template for building modular REST API backends with **Symfony 7.3** and **API Platform 4.1**.
+🚀 Production-ready starter template for building modular REST API backends with **Symfony 7.3** and **API Platform 4.1
+**.
 
 ## ✨ Features
 
@@ -41,20 +42,12 @@
    docker compose up -d --build
    ```
 
-4. **Install dependencies (if not installed automatically):**
-   ```bash
-   docker compose exec php composer install
-   ```
+4. **Access the application:**
+    - API: http://localhost
+    - API Docs: http://localhost/docs
+    - Web Profiler: http://localhost/_profiler
 
-5. **Run migrations:**
-   ```bash
-   docker compose exec php bin/console doctrine:migrations:migrate --no-interaction
-   ```
-
-6. **Access the application:**
-   - API: http://localhost
-   - API Docs: http://localhost/docs
-   - Web Profiler: http://localhost/_profiler
+   Dependencies are installed automatically via the entrypoint script. Migrations run automatically on container start.
 
 ## 📁 Project Structure
 
@@ -65,21 +58,27 @@
 │   ├── routes.php          # Route definitions
 │   └── services.php        # Modular DI auto-loader
 ├── docker/                 # Docker configurations
-│   ├── frankenphp/         # FrankenPHP + Caddy
+│   ├── frankenphp/         # FrankenPHP setup
+│   │   ├── Caddyfile       # Caddy server config
+│   │   ├── docker-entrypoint.sh # Container initialization
+│   │   └── conf.d/         # PHP INI configurations
 │   └── supervisor/         # Process management
+│       ├── supervisord.conf
+│       ├── supervisor.d/   # Production supervisor configs
+│       └── supervisor_dev.d/ # Dev supervisor configs
 ├── docs/                   # Documentation
 ├── migrations/             # Database migrations
 ├── public/                 # Public directory
 │   └── index.php           # Entry point
 ├── src/                    # Application code
-│   ├── Infrastructure/     # Core infrastructure
-│   │   └── Kernel.php      # Application kernel
+│   ├── Kernel.php          # Application kernel
 │   └── Example/            # Example module (delete in production)
 │       ├── Entity/         # Doctrine entities
 │       ├── Repository/     # Doctrine repositories
 │       ├── ApiPlatform/    # API Platform processors/extensions
 │       ├── Service/        # Business logic
-│       └── di.yaml         # Module DI configuration
+│       ├── di.yaml         # Module DI configuration
+│       └── api_platform.yaml # Module API Platform config
 ├── templates/              # Twig templates
 ├── tests/                  # Tests
 │   └── Unit/               # Unit tests
@@ -115,6 +114,7 @@
    namespace App\YourModule\Entity;
    
    use ApiPlatform\Metadata\ApiResource;
+   use Doctrine\DBAL\Types\Types;
    use Doctrine\ORM\Mapping as ORM;
    
    #[ORM\Entity]
@@ -122,8 +122,8 @@
    class YourEntity
    {
        #[ORM\Id]
-       #[ORM\GeneratedValue]
-       #[ORM\Column(type: 'integer')]
+       #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+       #[ORM\Column(type: Types::INTEGER)]
        private ?int $id = null;
        
        // Your fields here
@@ -137,11 +137,11 @@
    ```
 
 5. **Access your API:**
-   - List: `GET /your_entities`
-   - Get one: `GET /your_entities/{id}`
-   - Create: `POST /your_entities`
-   - Update: `PUT /your_entities/{id}`
-   - Delete: `DELETE /your_entities/{id}`
+    - List: `GET /your_entities`
+    - Get one: `GET /your_entities/{id}`
+    - Create: `POST /your_entities`
+    - Update: `PUT /your_entities/{id}`
+    - Delete: `DELETE /your_entities/{id}`
 
 ## 🔧 Common Commands
 
@@ -180,6 +180,7 @@ Services are automatically registered and configured when you place these files 
 ### Debugging with Xdebug
 
 Xdebug is pre-configured. For PHPStorm:
+
 1. Configure a server named `api`
 2. Set path mapping: `/app` → `<your-project-path>`
 3. Start listening for debug connections
@@ -210,6 +211,19 @@ docker compose exec php vendor/bin/php-cs-fixer fix --dry-run
 docker compose exec php composer validate --strict
 ```
 
+### Process Management
+
+FrankenPHP is managed by Supervisor for better process control:
+
+- **Dev mode**: Uses `docker/supervisor/supervisor_dev.d/frankenphp.ini` with `--watch` flag for auto-reload
+- **Prod mode**: Uses `docker/supervisor/supervisor.d/frankenphp.ini` with worker mode for performance
+
+View Supervisor logs:
+```bash
+docker compose exec php supervisorctl status
+docker compose logs -f php
+```
+
 ## 🚢 Production Deployment
 
 1. **Build production image:**
@@ -218,10 +232,10 @@ docker compose exec php composer validate --strict
    ```
 
 2. **Configure production environment:**
-   - Set `APP_ENV=prod`
-   - Set strong `APP_SECRET`
-   - Configure production database
-   - Set up Mercure JWT secrets
+    - Set `APP_ENV=prod`
+    - Set strong `APP_SECRET`
+    - Configure production database
+    - Set up Mercure JWT secrets
 
 3. **Run migrations:**
    ```bash
@@ -235,6 +249,7 @@ docker compose exec php composer validate --strict
 - [Architecture](docs/ARCHITECTURE.md) - Modular architecture details
 - [Getting Started](docs/GETTING_STARTED.md) - Step-by-step guide
 - [Module Development](docs/MODULE_DEVELOPMENT.md) - Creating modules
+- [Best Practices](docs/BEST_PRACTICES.md) - Code style and conventions
 - [Best Practices](docs/BEST_PRACTICES.md) - Code style and conventions
 
 ## 🔐 Security
