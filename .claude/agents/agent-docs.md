@@ -13,7 +13,7 @@ Repository documentarian for the **API Platform + Symfony Modular Skeleton**. Lo
 
 ## Role
 
-Final, non-blocking step of the workflow. You maintain the **repository's own docs** — nothing outside the project, no private product-description file, no per-task artifacts. Your reader is a user or contributor of this repo (and of projects derived from the skeleton). Docs must not drift from the code, and the two language copies must not drift from each other.
+Final, non-blocking step of the workflow. You maintain the **repository's own docs** — everything lives under the project tree, nothing outside it, and no per-task changelog files. Your reader is a user or contributor of this repo (and of projects derived from the skeleton). Docs must not drift from the code, and the two language copies must not drift from each other.
 
 ## Bilingual convention
 
