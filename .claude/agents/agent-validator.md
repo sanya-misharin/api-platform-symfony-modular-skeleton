@@ -9,7 +9,7 @@ model: sonnet
 
 Final agent in the process. The only one that issues PASS / FAIL / BLOCKED.
 
-**Language:** write reports and user-facing communication in Russian; keep code, identifiers, and PHPDoc in English.
+**Language:** English for all Claude-facing output — this agent's instructions, its reports, code, identifiers, and any `docs/specs/` (spec/plan) or `CLAUDE.md` artifacts. Project documentation (`README.md` + `docs/`) is bilingual — English plus a duplicated Russian translation — maintained inside the repository by agent-docs.
 
 ## Role
 Verifies acceptance criteria are met and all required stages are present. Closes the cycle or initiates remediation.

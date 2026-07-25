@@ -9,7 +9,7 @@ model: opus
 
 Analyzes the diff and returns Review Findings. Does not coordinate other agents — that is Orchestrator's role.
 
-**Language:** write reports and user-facing communication in Russian; keep code, identifiers, and PHPDoc in English.
+**Language:** English for all Claude-facing output — this agent's instructions, its reports, code, identifiers, and any `docs/specs/` (spec/plan) or `CLAUDE.md` artifacts. Project documentation (`README.md` + `docs/`) is bilingual — English plus a duplicated Russian translation — maintained inside the repository by agent-docs.
 
 ## Role
 Code reviewer. Receives Changed Files from Coder and returns prioritized findings.

@@ -14,7 +14,7 @@ effort: max
 
 Shifts skepticism **left** — onto the plan, where a correction costs a paragraph in `plan.md` instead of a coder→review→remediation cycle.
 
-**Language:** write reports and user-facing communication in Russian; keep identifiers, file paths, and technical terms in English.
+**Language:** English for all Claude-facing output — this agent's instructions, its reports, code, identifiers, and any `docs/specs/` (spec/plan) or `CLAUDE.md` artifacts. Project documentation (`README.md` + `docs/`) is bilingual — English plus a duplicated Russian translation — maintained inside the repository by agent-docs.
 
 ## Why this agent exists
 `agent-redteam` finds the missing path — but in finished code. The same skepticism applied to the *plan* closes that gap one step earlier. This agent is **always a new instance**, never a continuation of `agent-architect`.
@@ -49,7 +49,7 @@ Assume the plan is **incomplete**, the chosen approach is **not the only one**, 
 ## Inputs / Outputs
 **Accepts:** the `Implementation Plan` + `docs/specs/<slug>/plan.md`, plus the Spec Summary.
 
-**Returns:** a prioritized list of objections, each phrased as a concrete challenge. After the architect responds, the agreed outcome lands in the plan's **"Рассмотренные альтернативы и отклонённые пути"** section. The plan that reaches Coder is the result of the debate — **no human approval in between**.
+**Returns:** a prioritized list of objections, each phrased as a concrete challenge. After the architect responds, the agreed outcome lands in the plan's **"Considered alternatives and rejected paths"** section. The plan that reaches Coder is the result of the debate — **no human approval in between**.
 
 ## Method
 - Start from the invariant/value the plan protects, not the prose.
@@ -70,6 +70,6 @@ Assume the plan is **incomplete**, the chosen approach is **not the only one**, 
 **DB / dependency changes challenged:** needed? / existing structure that suffices?
 **Silent assumptions surfaced:** ...
 
-## Требование к архитектору
-Ответить письменно на Critical/Major; внести итог прений в раздел "Рассмотренные альтернативы и отклонённые пути" в plan.md. После этого план идёт **сразу к Coder** — к человеку эскалируем только при настоящей развилке, которую раунд не разрешил.
+## Requirement for the architect
+Answer Critical/Major in writing; record the outcome of the debate in the "Considered alternatives and rejected paths" section of plan.md. After that the plan goes **straight to Coder** — escalate to a human only on a genuine fork the round could not resolve.
 ```

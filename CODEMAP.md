@@ -1,59 +1,59 @@
 # CODEMAP — API Platform + Symfony Modular Skeleton
 
-Карта «фича → где искать» — первая точка входа перед задачей. Детали каждого модуля — в его `src/<Module>/CLAUDE.md`; этот файл их не дублирует, а связывает и даёт быстрый индекс по кодовой базе.
+A "feature → where to look" map — the first entry point before a task. Per-module details live in each `src/<Module>/CLAUDE.md`; this file does not duplicate them but links them and gives a quick index over the codebase.
 
-> Скелет пока содержит один демонстрационный модуль. Пополняй эту карту по мере появления реальных модулей и фич, а не пытайся выписать всё наперёд.
+> The skeleton currently ships one demonstration module. Grow this map as real modules and features appear — do not try to write everything up front.
 
-## Точки входа и загрузка
+## Entry points and loading
 
 - **HTTP entry:** `public/index.php` → `src/Kernel.php` (FrankenPHP).
-- **Роутинг API:** `config/routes/api_platform.yaml` (все ресурсы API Platform); прочий роутинг — `config/routes/`, `config/routes.php`.
-- **DI/автозагрузка модулей:** `config/services.php` — импортирует из **каждого** `src/**/` файлы `di`, `doctrine`, `api_platform` (`.php/.xml/.yaml/.yml`) + env-варианты `{name}_{env}`. Скелет использует YAML.
-- **Bundles:** `config/bundles.php`. **Пакеты (глобальный конфиг):** `config/packages/*.yaml` (doctrine, api_platform, security, mercure, nelmio_cors, monolog, framework, …).
+- **API routing:** `config/routes/api_platform.yaml` (all API Platform resources); other routing — `config/routes/`, `config/routes.php`.
+- **Module DI/auto-loading:** `config/services.php` — imports, from **each** `src/**/`, the files `di`, `doctrine`, `api_platform` (`.php/.xml/.yaml/.yml`) plus env variants `{name}_{env}`. The skeleton uses YAML.
+- **Bundles:** `config/bundles.php`. **Packages (global config):** `config/packages/*.yaml` (doctrine, api_platform, security, mercure, nelmio_cors, monolog, framework, …).
 
-## Слои модуля (где какая ответственность)
+## Module layers (which does what)
 
-| Что | Где | Когда |
-|-----|-----|-------|
-| REST-ресурс + операции | `src/<Module>/Entity/*.php` (`#[ApiResource]`) | всегда — точка объявления API |
-| Бизнес-логика записи | `src/<Module>/ApiPlatform/State/Processor/` | когда на запись нужна логика сверх CRUD |
-| Кастомное чтение | `src/<Module>/ApiPlatform/State/Provider/` | фильтрация/пагинация/вычисляемые поля |
-| Доменная логика | `src/<Module>/Service/` | логика, не привязанная к HTTP |
-| Input DTO | `src/<Module>/ApiPlatform/Input/` | когда форма запроса ≠ сущности |
-| Доступ к данным | `src/<Module>/Repository/` | запросы; без бизнес-логики |
-| Конфиг модуля | `src/<Module>/{di,doctrine,api_platform}.yaml` | регистрация сервисов/маппинг/ресурсы |
+| What | Where | When |
+|------|-------|------|
+| REST resource + operations | `src/<Module>/Entity/*.php` (`#[ApiResource]`) | always — the API declaration point |
+| Write business logic | `src/<Module>/ApiPlatform/State/Processor/` | when a write needs logic beyond CRUD |
+| Custom reads | `src/<Module>/ApiPlatform/State/Provider/` | filtering/pagination/computed fields |
+| Domain logic | `src/<Module>/Service/` | logic not tied to HTTP |
+| Input DTO | `src/<Module>/ApiPlatform/Input/` | when the request shape ≠ the entity |
+| Data access | `src/<Module>/Repository/` | queries; no business logic |
+| Module config | `src/<Module>/{di,doctrine,api_platform}.yaml` | service registration/mapping/resources |
 
-Для простого CRUD без доменной логики хватает `#[ApiResource]` на сущности + Doctrine — процессор не нужен (см. `Example`).
+For simple CRUD with no domain logic, `#[ApiResource]` on the entity + Doctrine is enough — no processor needed (see `Example`).
 
-## Авторизация
+## Authorization
 
-- **Глобальные правила:** `config/packages/security.yaml` (`access_control`, файрволы, провайдеры — под проект).
-- **Per-operation:** `security` expression на операции API Platform (`#[Get(security: "...")]`, `#[Post(securityPostDenormalize: "...")]`).
-- Ownership-check может вернуть **403 или 404** — учитывай в тестах.
+- **Global rules:** `config/packages/security.yaml` (`access_control`, firewalls, providers — per project).
+- **Per-operation:** a `security` expression on the API Platform operation (`#[Get(security: "...")]`, `#[Post(securityPostDenormalize: "...")]`).
+- An ownership check may return **403 or 404** — account for this in tests.
 
-## Данные и схема
+## Data and schema
 
-- **Сущности/маппинг:** `src/<Module>/Entity/` (атрибуты `#[ORM\...]`).
-- **Миграции:** `migrations/` (генерация — `doctrine:migrations:diff`; `migrate` — не агентами).
-- **Глобальный Doctrine-конфиг:** `config/packages/doctrine.yaml` и `doctrine_migrations.yaml`.
+- **Entities/mapping:** `src/<Module>/Entity/` (`#[ORM\...]` attributes).
+- **Migrations:** `migrations/` (generate with `doctrine:migrations:diff`; `migrate` is not run by agents).
+- **Global Doctrine config:** `config/packages/doctrine.yaml` and `doctrine_migrations.yaml`.
 
 ## Real-time
 
-- **Mercure:** `config/packages/mercure.yaml`; публикация апдейтов — через API Platform (`mercure: true` на ресурсе) либо `HubInterface`.
+- **Mercure:** `config/packages/mercure.yaml`; publishing updates — via API Platform (`mercure: true` on a resource) or `HubInterface`.
 
-## Тесты
+## Tests
 
-- **Unit:** `tests/Unit/<Module>/`. **Integration (API):** `tests/Integration/<Module>/` (расширяют `WebTestCase`).
-- Bootstrap: `tests/bootstrap.php`; конфиг — `phpunit.xml.dist`. Запуск — `vendor/bin/simple-phpunit`.
-- Тестовое окружение переопределяется файлами `src/<Module>/*_test.yaml` (env `test`).
+- **Unit:** `tests/Unit/<Module>/`. **Integration (API):** `tests/Integration/<Module>/` (extend `WebTestCase`).
+- Bootstrap: `tests/bootstrap.php`; config — `phpunit.xml.dist`. Run with `vendor/bin/simple-phpunit`.
+- The test environment is overridden by `src/<Module>/*_test.yaml` files (env `test`).
 
-## Фича → модуль
+## Feature → module
 
-### Example (демонстрационный, удаляется в проде)
-- **Код:** `src/Example/` — сущность `Example` (`examples` таблица, `int` PK, CRUD-операции API Platform: `GetCollection/Get/Post/Put/Delete`), `ExampleRepository` (save/remove). Логики сверх дефолтного CRUD нет.
-- **Назначение:** показывает минимальный модуль и автозагрузку конфигов. При старте реального проекта — удалить и заменить своими модулями по образцу `docs/MODULE_DEVELOPMENT.md` + `src/Example/CLAUDE.md`.
+### Example (demonstration, deleted in prod)
+- **Code:** `src/Example/` — the `Example` entity (`examples` table, `int` PK, API Platform CRUD operations: `GetCollection/Get/Post/Put/Delete`), `ExampleRepository` (save/remove). No logic beyond default CRUD.
+- **Purpose:** shows a minimal module and config auto-loading. When bootstrapping a real project — delete it and replace with your own modules following `docs/MODULE_DEVELOPMENT.md` + `src/Example/CLAUDE.md`.
 
-<!-- Добавляй сюда новые модули по мере их появления:
+<!-- Add new modules here as they appear:
 ### <Feature>
-- **Код:** `src/<Module>/...` — ключевые сущности/процессоры/сервисы. Подробности — `src/<Module>/CLAUDE.md`.
+- **Code:** `src/<Module>/...` — key entities/processors/services. Details — `src/<Module>/CLAUDE.md`.
 -->

@@ -17,7 +17,7 @@ effort: medium
 
 Main workflow dispatcher for **API Platform + Symfony Modular Skeleton** (Symfony 7.3 / PHP 8.4 / API Platform 4.1 / modular architecture). Drives a task from intake to `Status: PASS`. Does not write code — coordinates specialized agents via the `Agent` tool.
 
-**Language:** write reports and user-facing communication in Russian; keep code, identifiers, and PHPDoc in English.
+**Language:** English for all Claude-facing output — this agent's instructions, its reports, code, identifiers, and any `docs/specs/` (spec/plan) or `CLAUDE.md` artifacts. Project documentation (`README.md` + `docs/`) is bilingual — English plus a duplicated Russian translation — maintained inside the repository by agent-docs.
 
 ## Role
 Control plane, not a super-agent. Drives a task from intake to `Status: PASS` **fully autonomously — no approval stops**. The middle of the loop is gated by agent-architecture-critic (plan) and the review + validator stages (code), not by a human. Surfaces to the human **only** on a hard blocker.
@@ -61,7 +61,7 @@ git checkout main && git pull && git checkout -b feature/<slug>
 **Step 4 — Architecture critique (AUTONOMOUS GATE)** — judgment-gated, BEFORE implementation
 - Run agent-architecture-critic **only** on a high-stakes plan: the change touches authorization / ownership on API Platform operations (who may read or mutate whose resource); the design has real alternatives; it adds/changes DB schema or migrations; it affects data integrity or POST idempotency / unique constraints; or it introduces inter-module event contracts.
 - Always a **fresh instance** with an adversarial brief. Never reuse the architect instance.
-- One round only. The architect answers Critical/Major in writing and records the outcome in a **"Рассмотренные альтернативы и отклонённые пути"** section of `plan.md`.
+- One round only. The architect answers Critical/Major in writing and records the outcome in a **"Considered alternatives and rejected paths"** section of `plan.md`.
 - After the round, the debated plan goes **straight to implementation (Step 5)** — no human approval step.
 
 **Step 5 — Implementation**
