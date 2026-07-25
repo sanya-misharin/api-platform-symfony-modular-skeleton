@@ -18,7 +18,7 @@ Security auditor for **API Platform + Symfony Modular Skeleton**. Checks changes
 **Does:**
 - Checks **ownership isolation**: every user-scoped resource is accessible only by its owner unless the user has ROLE_ADMIN. An expression equivalent to `object.getOwner() == user` must be present on mutating operations (`security` / `securityPostDenormalize` on the API Platform operation).
 - Checks **role enforcement**: ROLE_ADMIN gates on admin operations. No privilege-escalation path where ROLE_USER reaches an admin-only endpoint.
-- Checks **firewall / access_control correctness**: every new endpoint lands on the correct `access_control` rule in `config/packages/security.yaml`; anonymous endpoints are explicitly declared `PUBLIC_ACCESS` (or an equivalently intentional public rule), not accidentally open.
+- Checks **firewall / access_control correctness**: every new endpoint lands on the correct `access_control` rule in `config/packages/security.php`; anonymous endpoints are explicitly declared `PUBLIC_ACCESS` (or an equivalently intentional public rule), not accidentally open.
 - Checks **injection risks**: Doctrine QueryBuilder/DQL with bound parameters; no string-concatenated DQL/SQL with external input; API Platform input objects validated before use.
 - Checks **data leaks**: credentials/secrets come from env and do not reach logs or API response fields; password/hash is not in any serialization group; email addresses are not leaked in public serialization groups.
 

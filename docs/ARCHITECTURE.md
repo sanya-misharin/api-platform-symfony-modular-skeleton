@@ -9,7 +9,7 @@ This project implements a **modular architecture** where each feature/domain is 
 A **module** is a cohesive unit of code organized around a specific business domain or feature. Each module:
 
 - Lives in `src/<ModuleName>/`
-- Has its own DI configuration (`di.yaml` or `di.php`)
+- Has its own DI configuration (`di.php`)
 - Contains related entities, services, repositories, and API resources
 - Is automatically discovered and loaded by the framework
 - Can be easily moved, renamed, or removed
@@ -24,7 +24,7 @@ src/YourModule/
 ├── ApiPlatform/         # State processors, extensions
 ├── Messenger/           # Message handlers (optional)
 ├── Serializer/          # Custom normalizers (optional)
-└── di.yaml              # Dependency injection configuration
+└── di.php               # Dependency injection configuration
 ```
 
 ## Module Benefits
@@ -60,25 +60,32 @@ $di->import('../src/**/{api_platform}.{php,xml,yaml,yml}');
 ```
 
 This means:
-- Drop a `di.yaml` in any module → services auto-registered
-- Add `doctrine.yaml` → custom types/extensions loaded
-- Include `api_platform.yaml` → API configuration applied
+- Drop a `di.php` in any module → services auto-registered
+- Add `doctrine.php` → custom types/extensions loaded
+- Include `api_platform.php` → API configuration applied
 
 ## Example Module
 
 The `Example` module demonstrates the pattern:
 
-```yaml
-# src/Example/di.yaml
-services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
+```php
+<?php
+// src/Example/di.php
 
-    App\Example\:
-        resource: '../'
-        exclude:
-            - '../Entity/'
+declare(strict_types=1);
+
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
+return static function (ContainerConfigurator $container): void {
+    $services = $container->services();
+
+    $services->defaults()
+        ->autowire()
+        ->autoconfigure();
+
+    $services->load('App\\Example\\', './')
+        ->exclude(['./Entity/']);
+};
 ```
 
 This auto-registers all services in the module except entities.
@@ -89,7 +96,7 @@ This auto-registers all services in the module except entities.
 |--------|------------------|----------------|
 | Purpose | Business/domain code | Infrastructure/integration |
 | Scope | Project-specific | Universal, reusable |
-| Complexity | Simple (just `di.yaml`) | Complex (Bundle + Extension classes) |
+| Complexity | Simple (just `di.php`) | Complex (Bundle + Extension classes) |
 | Usage | Feature isolation | Framework extensions |
 
 ## Best Practices
@@ -121,7 +128,7 @@ To convert an existing project:
 
 1. Identify feature boundaries
 2. Group related code into module directories
-3. Create `di.yaml` for each module
+3. Create `di.php` for each module
 4. Remove global service registration
 5. Test module isolation
 6. Iterate and refine boundaries

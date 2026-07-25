@@ -16,9 +16,9 @@ src/YourModule/
 ├── ApiPlatform/         # State processors, providers, extensions
 ├── Messenger/           # Message handlers (optional)
 ├── Serializer/          # Custom normalizers/denormalizers (optional)
-├── di.yaml              # Dependency injection configuration
-├── doctrine.yaml        # Doctrine-specific configuration (optional)
-├── api_platform.yaml    # API Platform configuration (optional)
+├── di.php               # Dependency injection configuration
+├── doctrine.php         # Doctrine-specific configuration (optional)
+├── api_platform.php     # API Platform configuration (optional)
 └── routing.php          # Module routes (optional)
 ```
 
@@ -32,18 +32,25 @@ mkdir -p src/YourModule/{Entity,Repository,Service,ApiPlatform}
 
 ### Step 2: Create DI Configuration
 
-Create `src/YourModule/di.yaml`:
+Create `src/YourModule/di.php`:
 
-```yaml
-services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
+```php
+<?php
 
-    App\YourModule\:
-        resource: '../'
-        exclude:
-            - '../Entity/'
+declare(strict_types=1);
+
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
+return static function (ContainerConfigurator $container): void {
+    $services = $container->services();
+
+    $services->defaults()
+        ->autowire()
+        ->autoconfigure();
+
+    $services->load('App\\YourModule\\', './')
+        ->exclude(['./Entity/']);
+};
 ```
 
 This configuration:
@@ -300,30 +307,53 @@ final readonly class YourService
 
 ## Module Configuration Files
 
-### doctrine.yaml
+### doctrine.php
 
-Create `src/YourModule/doctrine.yaml` for Doctrine-specific configuration:
+Create `src/YourModule/doctrine.php` for Doctrine-specific configuration:
 
-```yaml
-doctrine:
-    orm:
-        mappings:
-            YourModule:
-                type: attribute
-                dir: '%kernel.project_dir%/src/YourModule/Entity'
-                prefix: 'App\YourModule\Entity'
-                alias: YourModule
+```php
+<?php
+
+declare(strict_types=1);
+
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
+return static function (ContainerConfigurator $container): void {
+    $container->extension('doctrine', [
+        'orm' => [
+            'mappings' => [
+                'YourModule' => [
+                    'type' => 'attribute',
+                    'dir' => '%kernel.project_dir%/src/YourModule/Entity',
+                    'prefix' => 'App\\YourModule\\Entity',
+                    'alias' => 'YourModule',
+                ],
+            ],
+        ],
+    ]);
+};
 ```
 
-### api_platform.yaml
+### api_platform.php
 
-Create `src/YourModule/api_platform.yaml` for API Platform defaults:
+Create `src/YourModule/api_platform.php` for API Platform defaults:
 
-```yaml
-api_platform:
-    defaults:
-        extra_properties:
-            module: 'YourModule'
+```php
+<?php
+
+declare(strict_types=1);
+
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
+return static function (ContainerConfigurator $container): void {
+    $container->extension('api_platform', [
+        'defaults' => [
+            'extra_properties' => [
+                'module' => 'YourModule',
+            ],
+        ],
+    ]);
+};
 ```
 
 ### routing.php
@@ -451,7 +481,7 @@ See the `src/Example/` module for a complete working example. Delete it in produ
 
 ### Services not found
 
-Ensure `di.yaml` exists and follows the correct format. Clear cache:
+Ensure `di.php` exists and follows the correct format. Clear cache:
 
 ```bash
 docker compose exec php bin/console cache:clear

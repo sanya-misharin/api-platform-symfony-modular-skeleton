@@ -171,18 +171,25 @@ class ProductRepository extends ServiceEntityRepository
 
 ### 2.4 Create DI Configuration
 
-Create `src/Product/di.yaml`:
+Create `src/Product/di.php`:
 
-```yaml
-services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
+```php
+<?php
 
-    App\Product\:
-        resource: '../'
-        exclude:
-            - '../Entity/'
+declare(strict_types=1);
+
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
+return static function (ContainerConfigurator $container): void {
+    $services = $container->services();
+
+    $services->defaults()
+        ->autowire()
+        ->autoconfigure();
+
+    $services->load('App\\Product\\', './')
+        ->exclude(['./Entity/']);
+};
 ```
 
 ## Step 3: Generate and Run Migration

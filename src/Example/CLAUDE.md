@@ -6,7 +6,7 @@ Specifics of the `src/Example/` module. Global rules — in the root `CLAUDE.md`
 
 ## Module responsibility
 
-Demonstration: a single `Example` entity with full CRUD via API Platform, no domain logic. Serves as an example of how a module plugs into the skeleton (the `di.yaml` / `api_platform.yaml` configs) and what a resource entity looks like.
+Demonstration: a single `Example` entity with full CRUD via API Platform, no domain logic. Serves as an example of how a module plugs into the skeleton (the `di.php` / `api_platform.php` configs) and what a resource entity looks like.
 
 ## Domain model (`src/Example/Entity/`)
 
@@ -30,10 +30,10 @@ Empty (`Service/.gitkeep`). Domain logic goes here; processors stay thin orchest
 
 ## Module configuration
 
-- `di.yaml` — `App\Example\` with `autowire`/`autoconfigure`, `resource: './'`, `exclude: ['./Entity/']`. Auto-loaded by `config/services.php`.
-- `api_platform.yaml` — registers the resource mapping path: `%kernel.project_dir%/src/Example/Entity`.
-- `doctrine.yaml` — absent (the global mapping is enough); add it if a module needs an explicit ORM config.
-- Test overrides — `*_test.yaml` (not needed yet).
+- `di.php` — returns a `ContainerConfigurator` closure: `$services->defaults()->autowire()->autoconfigure()` + `$services->load('App\\Example\\', './')->exclude(['./Entity/'])`. Auto-loaded by `config/services.php`.
+- `api_platform.php` — `ContainerConfigurator` closure registering the resource mapping path via `$container->extension('api_platform', ['mapping' => ['paths' => ['%kernel.project_dir%/src/Example/Entity']]])`.
+- `doctrine.php` — absent (the global mapping is enough); add it if a module needs an explicit ORM config.
+- Test overrides — `*_test.php` (not needed yet).
 
 ## Tests
 

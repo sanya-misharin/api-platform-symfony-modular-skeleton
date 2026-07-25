@@ -112,10 +112,10 @@ git checkout main && git pull && git checkout -b feat/<slug>
 ## Project context (API Platform + Symfony Modular Skeleton)
 - **Stack:** PHP 8.4, Symfony 7.3, API Platform 4.1, Doctrine ORM 3, PostgreSQL 16, FrankenPHP, Mercure (real-time)
 - **Nature:** a starter template for modular REST API backends — the only module today is the demo `src/Example/`, deleted in real projects and replaced by your own
-- **Architecture:** modular (`src/<Module>/`); each module has `src/<Module>/{di,doctrine,api_platform}.yaml` (auto-loaded, YAML). Security is global (`config/packages/security.yaml`) + operation-level `security` attributes — no per-module security config
+- **Architecture:** modular (`src/<Module>/`); each module has `src/<Module>/{di,doctrine,api_platform}.php` (auto-loaded, PHP). Security is global (`config/packages/security.php`) + operation-level `security` attributes — no per-module security config
 - **Entry points:** State Processors (HTTP write), State Providers (custom reads). Logic in the Service layer, not controllers
 - **Status changes:** plain named methods on the entity (`publish()`, `approve()`), no state machine
-- **Auth:** generic Symfony Security — operation-level `security` expressions + `config/packages/security.yaml` access_control; ownership `object.getOwner() == user` (may return 403 or 404); roles ROLE_USER / ROLE_ADMIN
+- **Auth:** generic Symfony Security — operation-level `security` expressions + `config/packages/security.php` access_control; ownership `object.getOwner() == user` (may return 403 or 404); roles ROLE_USER / ROLE_ADMIN
 - **Tests:** `docker compose exec -T php vendor/bin/simple-phpunit`
 - **Static:** `docker compose exec -T php vendor/bin/phpstan analyse` (level 6), **Lint:** `docker compose exec -T php vendor/bin/php-cs-fixer fix --dry-run --diff`
 - **Specs/plans:** `docs/specs/<slug>/spec.md` and `plan.md`

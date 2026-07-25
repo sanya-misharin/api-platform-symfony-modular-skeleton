@@ -79,8 +79,8 @@
 │       ├── Repository/     # Doctrine repositories
 │       ├── ApiPlatform/    # API Platform processors/extensions
 │       ├── Service/        # Business logic
-│       ├── di.yaml         # Module DI configuration
-│       └── api_platform.yaml # Module API Platform config
+│       ├── di.php          # Module DI configuration
+│       └── api_platform.php # Module API Platform config
 ├── templates/              # Twig templates
 ├── tests/                  # Tests
 │   └── Unit/               # Unit tests
@@ -94,17 +94,24 @@
    mkdir -p src/YourModule/{Entity,Repository,Service,ApiPlatform}
    ```
 
-2. **Create DI configuration** (`src/YourModule/di.yaml`):
-   ```yaml
-   services:
-       _defaults:
-           autowire: true
-           autoconfigure: true
+2. **Create DI configuration** (`src/YourModule/di.php`):
+   ```php
+   <?php
 
-       App\YourModule\:
-           resource: '../'
-           exclude:
-               - '../Entity/'
+   declare(strict_types=1);
+
+   use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
+   return static function (ContainerConfigurator $container): void {
+       $services = $container->services();
+
+       $services->defaults()
+           ->autowire()
+           ->autoconfigure();
+
+       $services->load('App\\YourModule\\', './')
+           ->exclude(['./Entity/']);
+   };
    ```
 
 3. **Create an entity:**
@@ -171,9 +178,9 @@ docker compose logs -f php
 
 The project uses **modular DI configuration** that automatically loads service definitions from each module:
 
-- `src/*/di.yaml` - Service definitions
-- `src/*/doctrine.yaml` - Doctrine-specific configuration
-- `src/*/api_platform.yaml` - API Platform configuration
+- `src/*/di.php` - Service definitions
+- `src/*/doctrine.php` - Doctrine-specific configuration
+- `src/*/api_platform.php` - API Platform configuration
 
 Services are automatically registered and configured when you place these files in your module directories.
 

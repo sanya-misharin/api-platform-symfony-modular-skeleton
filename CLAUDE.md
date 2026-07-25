@@ -18,7 +18,7 @@ New services are bootstrapped from this skeleton. The agent system exists to dri
 - **PHP 8.4** (strict types), **Symfony 7.3**, **API Platform 4.1** (REST/JSON + OpenAPI)
 - **Doctrine ORM 3.5** + PostgreSQL 16
 - **Web server:** FrankenPHP (Caddy, worker mode in prod) + **Mercure** (real-time)
-- **Auth:** Symfony Security component (pre-installed but not wired to a concrete provider — authentication is chosen per project). Roles/ownership are expressed via API Platform operation-level `security` + `config/packages/security.yaml`.
+- **Auth:** Symfony Security component (pre-installed but not wired to a concrete provider — authentication is chosen per project). Roles/ownership are expressed via API Platform operation-level `security` + `config/packages/security.php`.
 - **Tests:** **PHPUnit** via `vendor/bin/simple-phpunit` (`symfony/phpunit-bridge`) · **Static:** PHPStan level 6 · **Lint:** php-cs-fixer ^3 (`@Symfony`) + Rector ^1
 - **Runtime:** dependencies and migrations are applied automatically by the entrypoint script on container start.
 
@@ -41,8 +41,8 @@ src/
 │   ├── Repository/
 │   ├── Service/
 │   ├── ApiPlatform/
-│   ├── di.yaml
-│   └── api_platform.yaml
+│   ├── di.php
+│   └── api_platform.php
 └── Kernel.php
 ```
 
@@ -50,14 +50,14 @@ Every substantive module must have its own **`src/<Module>/CLAUDE.md`** with the
 
 ### Module config files (auto-loading)
 
-`config/services.php` automatically imports, from **each** module, the files `di`, `doctrine`, `api_platform` in `.php/.xml/.yaml/.yml`, plus their env variants `{name}_{env}` (e.g. `di_test.yaml`). The skeleton uses **YAML**.
+`config/services.php` automatically imports, from **each** module, the files `di`, `doctrine`, `api_platform` in `.php/.xml/.yaml/.yml`, plus their env variants `{name}_{env}` (e.g. `di_test.php`). The skeleton uses **PHP** config.
 
 | File                          | Purpose                                        |
 |-------------------------------|------------------------------------------------|
-| `src/<Module>/di.yaml`        | Module service registration (autowire/autoconfigure, exclude `Entity/`) |
-| `src/<Module>/doctrine.yaml`  | Module ORM mapping (when an explicit one is needed) |
-| `src/<Module>/api_platform.yaml` | Resource mapping paths for the module          |
-| `src/<Module>/*_test.yaml`    | Overrides in the test environment              |
+| `src/<Module>/di.php`        | Module service registration (autowire/autoconfigure, exclude `Entity/`) |
+| `src/<Module>/doctrine.php`  | Module ORM mapping (when an explicit one is needed) |
+| `src/<Module>/api_platform.php` | Resource mapping paths for the module          |
+| `src/<Module>/*_test.php`    | Overrides in the test environment              |
 
 > **Only `di` / `doctrine` / `api_platform` are auto-loaded per module.** Security, routing, and everything else are global (`config/packages/`, `config/routes/`). There is no per-module `messenger.php`/`workflow.php`/`security.php` (unlike our larger projects — those subsystems do not exist here).
 
@@ -95,7 +95,7 @@ Modules communicate via **events** (EventDispatcher + `#[AsEventListener]`), not
 ## Authorization
 
 - Symfony Security is pre-installed, but the provider/firewall for a concrete project is not wired — the concrete authentication model is chosen when bootstrapping a project from the skeleton.
-- **Access rules** are set two ways: an operation-level `security` expression directly on the API Platform operation (`#[Get(security: "...")]`) and/or `access_control` in `config/packages/security.yaml`.
+- **Access rules** are set two ways: an operation-level `security` expression directly on the API Platform operation (`#[Get(security: "...")]`) and/or `access_control` in `config/packages/security.php`.
 - **Ownership** — an expression like `object.getOwner() == user` on a mutating operation. A security check may return **403 or 404** — in tests assert `assertContains($code, [403, 404])`.
 
 ## Conventions

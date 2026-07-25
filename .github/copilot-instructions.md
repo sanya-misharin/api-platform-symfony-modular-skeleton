@@ -17,8 +17,8 @@
 
 ### Module Structure
 - Modules live in `src/<ModuleName>/`
-- Each module MUST have `di.yaml` (or `di.php`) for service configuration
-- Module can optionally have `doctrine.yaml`, `api_platform.yaml`, `routing.php`
+- Each module MUST have `di.php` for service configuration
+- Module can optionally have `doctrine.php`, `api_platform.php`, `routing.php`
 - Typical module structure:
   ```
   src/YourModule/
@@ -28,12 +28,12 @@
   ├── ApiPlatform/         # State processors, extensions
   ├── Messenger/           # Message handlers (if needed)
   ├── Serializer/          # Custom normalizers (if needed)
-  └── di.yaml              # DI configuration
+  └── di.php              # DI configuration
   ```
 
 ### Configuration
 - **Bundles**: Registered in `config/bundles.php`
-- **Services**: Auto-loaded from `src/**/di.yaml` via `config/services.php`
+- **Services**: Auto-loaded from `src/**/di.php` via `config/services.php`
 - **Routes**: Auto-loaded from `src/**/routing.php` via `config/routes.php`
 - **Package configs**: In `config/packages/`
 
@@ -80,7 +80,7 @@
 
 ### API Platform
 - REST endpoints auto-generated from entities with `#[ApiResource]`
-- Configuration: `config/packages/api_platform.yaml`
+- Configuration: `config/packages/api_platform.php`
 - OpenAPI docs: `/docs`
 
 ### Doctrine ORM
@@ -90,28 +90,35 @@
 
 ### Mercure (Optional)
 - Real-time updates via Mercure Hub
-- Configuration: `config/packages/mercure.yaml`
+- Configuration: `config/packages/mercure.php`
 
 ### Security
 - Symfony Security component
-- Basic configuration in `config/packages/security.yaml`
+- Basic configuration in `config/packages/security.php`
 - Extend for JWT, OAuth, etc. as needed
 
 ## Project-Specific Notes
 
 ### Adding a New Module
 1. Create directory: `mkdir -p src/ModuleName/{Entity,Repository,Service}`
-2. Create `src/ModuleName/di.yaml`:
-   ```yaml
-   services:
-       _defaults:
-           autowire: true
-           autoconfigure: true
-       
-       App\ModuleName\:
-           resource: '../'
-           exclude:
-               - '../Entity/'
+2. Create `src/ModuleName/di.php`:
+   ```php
+   <?php
+
+   declare(strict_types=1);
+
+   use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
+   return static function (ContainerConfigurator $container): void {
+       $services = $container->services();
+
+       $services->defaults()
+           ->autowire()
+           ->autoconfigure();
+
+       $services->load('App\\ModuleName\\', './')
+           ->exclude(['./Entity/']);
+   };
    ```
 3. Create entities, repositories, services
 4. Generate migration: `bin/console doctrine:migrations:diff`
@@ -145,7 +152,7 @@
 
 This is a **skeleton/template project**:
 - Delete `src/Example/` module in production projects
-- Customize `config/packages/api_platform.yaml` (title, description)
+- Customize `config/packages/api_platform.php` (title, description)
 - Update `composer.json` (name, description)
 - Configure security as needed
 - Add modules for your domain

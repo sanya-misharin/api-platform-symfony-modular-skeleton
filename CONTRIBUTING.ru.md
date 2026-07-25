@@ -80,7 +80,7 @@ docker compose exec -T php bin/console doctrine:migrations:diff
 
 ## Конвенции модулей (кратко)
 
-- Каждый модуль самодостаточен под `src/<Module>/`, со своими `di.yaml` / `api_platform.yaml` и `src/<Module>/CLAUDE.md`.
+- Каждый модуль самодостаточен под `src/<Module>/`, со своими `di.php` / `api_platform.php` и `src/<Module>/CLAUDE.md`.
 - Бизнес-логика — в **Service**; **State Processor** — тонкая HTTP-точка входа; кастомное чтение — в **State Provider**.
 - `declare(strict_types=1);` везде; `final readonly class` для сервисов/процессоров/провайдеров; сущности — не `final`.
 - Подробности: [docs/MODULE_DEVELOPMENT.md](docs/MODULE_DEVELOPMENT.md) и [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
