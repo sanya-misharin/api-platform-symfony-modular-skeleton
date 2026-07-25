@@ -1,7 +1,7 @@
 # Instructions for AI Copilot
 
 ## Project Overview
-- This is a **modular API backend skeleton** built with Symfony 7.3 and API Platform 4.1
+- This is a **modular API backend skeleton** built with Symfony 7.4 and API Platform 4.3
 - The architecture is based on **isolated, feature-based modules** for better scalability and maintainability
 - Each module is self-contained with its own entities, services, and DI configuration
 - Infrastructure and core loading are in `src/Infrastructure/`

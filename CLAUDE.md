@@ -15,11 +15,11 @@ New services are bootstrapped from this skeleton. The agent system exists to dri
 
 ## Stack
 
-- **PHP 8.4** (strict types), **Symfony 7.3**, **API Platform 4.1** (REST/JSON + OpenAPI)
-- **Doctrine ORM 3.5** + PostgreSQL 16
+- **PHP 8.4** (strict types), **Symfony 7.4**, **API Platform 4.3** (REST/JSON + OpenAPI)
+- **Doctrine ORM 3.6** + PostgreSQL 16
 - **Web server:** FrankenPHP (Caddy, worker mode in prod) + **Mercure** (real-time)
 - **Auth:** Symfony Security component (pre-installed but not wired to a concrete provider — authentication is chosen per project). Roles/ownership are expressed via API Platform operation-level `security` + `config/packages/security.php`.
-- **Tests:** **PHPUnit** via `vendor/bin/simple-phpunit` (`symfony/phpunit-bridge`) · **Static:** PHPStan level 6 · **Lint:** php-cs-fixer ^3 (`@Symfony`) + Rector ^1
+- **Tests:** **PHPUnit** via `vendor/bin/simple-phpunit` (`symfony/phpunit-bridge`) · **Static:** PHPStan level 6 · **Lint:** php-cs-fixer ^3 (`@Symfony`) + Rector ^2
 - **Runtime:** dependencies and migrations are applied automatically by the entrypoint script on container start.
 
 ### What the skeleton does NOT have (important — do not assume it exists)
