@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git diff:*)", "Bash(git status:*)", "Bash(git log:*)", "Bash(git show:*)",
+      "Bash(git branch:*)", "Bash(git fetch:*)",
+      "Bash(ls:*)", "Bash(grep:*)", "Bash(find:*)", "Bash(cat:*)", "Bash(head:*)", "Bash(tail:*)", "Bash(wc:*)",
+      "Bash(docker compose exec -T php vendor/bin/simple-phpunit:*)",
+      "Bash(docker compose exec -T php vendor/bin/phpstan:*)",
+      "Bash(docker compose exec -T php vendor/bin/php-cs-fixer fix --dry-run:*)",
+      "Bash(docker compose exec -T php vendor/bin/rector process --dry-run:*)",
+      "Bash(docker compose exec -T php bin/console doctrine:migrations:status:*)",
+      "Bash(docker compose exec -T php bin/console doctrine:migrations:diff:*)",
+      "Bash(docker compose exec -T php bin/console doctrine:schema:validate:*)",
+      "Bash(docker compose exec -T php bin/console debug:*)",
+      "Bash(docker compose exec -T php bin/console cache:clear:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__query-docs"
+    ],
+    "deny": [
+      "Bash(git reset --hard:*)",
+      "Bash(docker compose down:*)",
+      "Bash(docker compose exec -T php bin/console doctrine:migrations:migrate:*)"
+    ]
+  },
+  "worktree": {
+    "symlinkDirectories": ["vendor"]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          { "type": "command", "command": "FILES=$(git diff --name-only HEAD -- '*.php' | tr '\\n' ' ') && [ -n \"$FILES\" ] && docker compose exec -T php vendor/bin/php-cs-fixer fix --dry-run --diff $FILES || true" }
+        ]
+      }
+    ]
+  }
+}
