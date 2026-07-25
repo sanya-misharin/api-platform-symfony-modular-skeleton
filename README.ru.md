@@ -13,7 +13,7 @@
 - **🐳 Готов к Docker** — полная настройка Docker с FrankenPHP
 - **⚡ FrankenPHP** — современный PHP-сервер с worker-режимом для продакшена
 - **🛠️ Инструменты разработки** — PHPStan уровня 6, PHPUnit, Xdebug, Web Profiler
-- **🔒 Безопасность** — предварительно настроенный компонент Symfony Security
+- **🔒 Безопасность** — компонент Symfony Security предустановлен (аутентификация — под проект)
 - **📊 Mercure** — поддержка обновлений в реальном времени
 - **📝 Самодокументируемый код** — строгая типизация, без лишних комментариев
 
@@ -82,6 +82,8 @@
 │       └── api_platform.php # Module API Platform config
 ├── templates/              # Twig templates
 ├── tests/                  # Tests
+│   ├── ApiTestCase.php     # Base case for API integration tests (schema reset)
+│   ├── Integration/        # API integration tests (WebTestCase)
 │   └── Unit/               # Unit tests
 └── var/                    # Runtime files (cache, logs)
 ```
@@ -200,7 +202,7 @@ Xdebug предварительно настроен. Для PHPStorm:
 docker compose exec php vendor/bin/simple-phpunit
 
 # Specific test
-docker compose exec php vendor/bin/simple-phpunit tests/Unit/YourTest.php
+docker compose exec php vendor/bin/simple-phpunit tests/Integration/Example/ExampleTest.php
 
 # With coverage
 docker compose exec php vendor/bin/simple-phpunit --coverage-html var/coverage
@@ -262,8 +264,8 @@ docker compose logs -f php
 
 ## 🔐 Безопасность
 
-- Предварительно настроенный компонент Symfony Security
-- Поддержка аутентификации JWT (опционально)
+- Компонент Symfony Security предустановлен — провайдер/файрвол подключаете под свой проект (модель аутентификации не выбрана за вас; JWT из коробки нет)
+- Авторизация — через operation-level `security`-выражения API Platform + `access_control` в `config/packages/security.php`
 - Принудительный HTTPS в продакшене
 - Заголовки безопасности настроены в Caddy
 

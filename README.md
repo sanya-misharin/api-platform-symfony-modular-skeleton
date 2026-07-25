@@ -14,7 +14,7 @@
 - **🐳 Docker Ready** - Complete Docker setup with FrankenPHP
 - **⚡ FrankenPHP** - Modern PHP server with worker mode for production
 - **🛠️ Dev Tools** - PHPStan level 6, PHPUnit, Xdebug, Web Profiler
-- **🔒 Security** - Symfony Security component pre-configured
+- **🔒 Security** - Symfony Security component pre-installed (choose your auth per project)
 - **📊 Mercure** - Real-time updates support
 - **📝 Self-Documenting Code** - Strict typing, no comment clutter
 
@@ -83,6 +83,8 @@
 │       └── api_platform.php # Module API Platform config
 ├── templates/              # Twig templates
 ├── tests/                  # Tests
+│   ├── ApiTestCase.php     # Base case for API integration tests (schema reset)
+│   ├── Integration/        # API integration tests (WebTestCase)
 │   └── Unit/               # Unit tests
 └── var/                    # Runtime files (cache, logs)
 ```
@@ -201,7 +203,7 @@ Xdebug is pre-configured. For PHPStorm:
 docker compose exec php vendor/bin/simple-phpunit
 
 # Specific test
-docker compose exec php vendor/bin/simple-phpunit tests/Unit/YourTest.php
+docker compose exec php vendor/bin/simple-phpunit tests/Integration/Example/ExampleTest.php
 
 # With coverage
 docker compose exec php vendor/bin/simple-phpunit --coverage-html var/coverage
@@ -263,8 +265,8 @@ docker compose logs -f php
 
 ## 🔐 Security
 
-- Symfony Security component pre-configured
-- JWT authentication support (optional)
+- Symfony Security component pre-installed — wire your own provider/firewall per project (no authentication model is chosen for you; there is no JWT out of the box)
+- Authorization via API Platform operation-level `security` expressions + `access_control` in `config/packages/security.php`
 - HTTPS enforced in production
 - Security headers configured in Caddy
 
