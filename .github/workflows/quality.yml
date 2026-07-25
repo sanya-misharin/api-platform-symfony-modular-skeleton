@@ -1,0 +1,87 @@
+name: Quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  SYMFONY_PHPUNIT_VERSION: "9.6"
+
+jobs:
+  static:
+    name: PHPStan · CS-Fixer · composer
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: ctype, iconv, intl, mbstring, pdo_pgsql, xml
+          ini-values: memory_limit=-1
+          coverage: none
+
+      - name: Validate composer.json
+        run: composer validate --strict
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: "--no-scripts"
+
+      # Populates vendor/bin/.phpunit so phpstan-bootstrap.php can resolve PHPUnit classes.
+      - name: Install PHPUnit (bridge)
+        run: vendor/bin/simple-phpunit install
+
+      - name: PHPStan
+        run: vendor/bin/phpstan analyse --no-progress
+
+      - name: PHP CS Fixer
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff
+
+  tests:
+    name: PHPUnit
+    runs-on: ubuntu-latest
+    services:
+      database:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: app
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: "!ChangeMe!"
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U app -d app"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: ctype, iconv, intl, mbstring, pdo_pgsql, xml
+          ini-values: memory_limit=-1
+          coverage: none
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: "--no-scripts"
+
+      # DATABASE_URL is inherited from .env (127.0.0.1 host = the Postgres service above);
+      # doctrine.php adds the _test suffix, and the test suite creates the database.
+      - name: Run tests
+        run: vendor/bin/simple-phpunit
