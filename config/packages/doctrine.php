@@ -27,6 +27,17 @@ return static function (ContainerConfigurator $container): void {
                 PostgreSQLPlatform::class => 'identity',
             ],
             'auto_mapping' => true,
+            // Single mapping for the whole modular tree: every module's entities live
+            // under src/<Module>/Entity with the shared App\ prefix, so one attribute
+            // mapping over src/ registers them all — a new module needs no ORM config.
+            'mappings' => [
+                'App' => [
+                    'type' => 'attribute',
+                    'dir' => '%kernel.project_dir%/src',
+                    'prefix' => 'App',
+                    'is_bundle' => false,
+                ],
+            ],
             'controller_resolver' => [
                 'auto_mapping' => false,
             ],

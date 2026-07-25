@@ -111,6 +111,7 @@ Modules communicate via **events** (EventDispatcher + `#[AsEventListener]`), not
 
 ## Database
 
+- **ORM mapping is global and automatic:** `config/packages/doctrine.php` maps `App` → `src` (attribute driver), so any `#[ORM\Entity]` under `src/<Module>/Entity` is registered — a new module needs no Doctrine config for its entities. (A module adds its own `doctrine.php` only for special cases: custom types, an explicit non-standard mapping.)
 - PostgreSQL 16, UTC. `snake_case` tables/columns.
 - `DateTimeImmutable` for timestamp fields.
 - Indexes on columns in `WHERE`/`ORDER BY`, on FKs. Unique indexes where uniqueness is an invariant.
@@ -125,7 +126,8 @@ docker compose exec -T php vendor/bin/simple-phpunit
 docker compose exec -T php vendor/bin/simple-phpunit tests/Integration/Example/ExampleTest.php
 docker compose exec -T php vendor/bin/simple-phpunit --filter testName
 
-# Static analysis (level 6)
+# Static analysis (level 6; analyses tests/ too — on a fresh checkout run
+# `vendor/bin/simple-phpunit install` once first so PHPUnit classes are present)
 docker compose exec -T php vendor/bin/phpstan analyse
 
 # Lint (agents run dry-run; fix only on request)

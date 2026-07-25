@@ -37,7 +37,9 @@ Empty (`Service/.gitkeep`). Domain logic goes here; processors stay thin orchest
 
 ## Tests
 
-The module has no integration tests yet (`tests/` contains only `tests/Unit/.gitkeep`). For a real module: API tests — `tests/Integration/Example/` (extend `WebTestCase`), unit — `tests/Unit/Example/`. Run with `vendor/bin/simple-phpunit`.
+- **Integration:** `tests/Integration/Example/ExampleTest.php` — the CRUD contract (collection, create/201, validation/422, read, update, delete/204→404). Extends `App\Tests\ApiTestCase` (the base over API Platform's `ApiTestCase`) which ensures the test database exists and resets the schema before each test.
+- **Unit:** `tests/Unit/Example/ExampleEntityTest.php` — the `Example` entity in isolation.
+- Run with `docker compose exec -T php vendor/bin/simple-phpunit`. New modules mirror this layout: `tests/Integration/<Module>/`, `tests/Unit/<Module>/`.
 
 ## Section template for a new module
 
