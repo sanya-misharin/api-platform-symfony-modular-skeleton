@@ -1,0 +1,8 @@
+# Set to true to also allow free-form (non-template) issues.
+blank_issues_enabled: false
+
+# Add a discussions/support link once the repo has a remote, e.g.:
+# contact_links:
+#   - name: Questions & discussion
+#     url: https://github.com/<owner>/<repo>/discussions
+#     about: Ask questions and discuss ideas here instead of opening an issue.
