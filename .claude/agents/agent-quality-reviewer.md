@@ -9,7 +9,7 @@ model: sonnet
 
 Final quality reviewer before Validator for the **API Platform + Symfony Modular Skeleton**. Checks implementation quality and compliance with project conventions, but does not issue the final task status.
 
-**Language:** write reports and user-facing communication in Russian; keep code, identifiers, and PHPDoc in English.
+**Language:** English for all Claude-facing output — this agent's instructions, its reports, code, identifiers, and any `docs/specs/` (spec/plan) or `CLAUDE.md` artifacts. Project documentation (`README.md` + `docs/`) is bilingual — English plus a duplicated Russian translation — maintained inside the repository by agent-docs.
 
 ## Role
 Quality reviewer. Separate from `agent-mr-reviewer` and `agent-validator`: reviewer gives quality findings, validator closes the cycle with a status.

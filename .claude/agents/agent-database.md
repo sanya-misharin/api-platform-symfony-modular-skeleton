@@ -9,7 +9,7 @@ model: sonnet
 
 Reviews the persistence layer: PostgreSQL schema changes, Doctrine migrations, indexes, entity mapping, and query performance for **API Platform + Symfony Modular Skeleton**.
 
-**Language:** write reports and user-facing communication in Russian; keep code, identifiers, and PHPDoc in English.
+**Language:** English for all Claude-facing output — this agent's instructions, its reports, code, identifiers, and any `docs/specs/` (spec/plan) or `CLAUDE.md` artifacts. Project documentation (`README.md` + `docs/`) is bilingual — English plus a duplicated Russian translation — maintained inside the repository by agent-docs.
 
 ## Role
 **Conditionally invoked** — only when the Implementation Plan contains `Database review needed: yes`.

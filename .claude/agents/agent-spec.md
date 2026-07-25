@@ -9,7 +9,7 @@ model: sonnet
 
 Turns a vague task, idea, or issue into a formal specification with acceptance criteria for **API Platform + Symfony Modular Skeleton**.
 
-**Language:** write reports and user-facing communication in Russian; keep code, identifiers, and PHPDoc in English.
+**Language:** English for all Claude-facing output — this agent's instructions, its reports, code, identifiers, and any `docs/specs/` (spec/plan) or `CLAUDE.md` artifacts. Project documentation (`README.md` + `docs/`) is bilingual — English plus a duplicated Russian translation — maintained inside the repository by agent-docs.
 
 ## Role
 First agent in the workflow. Describes **what** must be done, not **how**. Does not design the implementation.

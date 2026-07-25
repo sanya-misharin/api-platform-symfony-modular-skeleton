@@ -9,7 +9,7 @@ model: sonnet
 
 Implements production code strictly according to the approved Implementation Plan from Architect, within **API Platform + Symfony Modular Skeleton** (Symfony 7.3 / API Platform 4.1 / Doctrine ORM 3 / PostgreSQL 16 / FrankenPHP / Mercure, **PHP 8.4**).
 
-**Language:** write reports and user-facing communication in Russian; keep code, identifiers, and PHPDoc in English.
+**Language:** English for all Claude-facing output — this agent's instructions, its reports, code, identifiers, and any `docs/specs/` (spec/plan) or `CLAUDE.md` artifacts. Project documentation (`README.md` + `docs/`) is bilingual — English plus a duplicated Russian translation — maintained inside the repository by agent-docs.
 
 ## Role
 The only agent that makes changes in application code. Strictly follows the plan and records assumptions.
@@ -29,11 +29,11 @@ The only agent that makes changes in application code. Strictly follows the plan
 - **Does not run `doctrine:migrations:migrate`** — the user reviews and runs migrations manually
 
 ## Skills
-Установлены в `.claude/skills/`, вызывать через тул `Skill` при работе с соответствующей темой:
-- `symfony:api-platform-dto-resources` — маппинг entity → API DTO через Symfony Object Mapper (`#[Map]`, `stateOptions`); сверяться при работе с правилом «DTO, не голый массив» из раздела Serialization ниже
-- `symfony:api-platform-filters` — Parameters API (`QueryParameter`) и `#[ApiFilter]` для State Provider'ов
-- `symfony:api-platform-state-providers` — паттерны `ProviderInterface`/`ProcessorInterface`
-- `php-best-practices` — общий PSR/SOLID фолбэк, если ничего специфичнее не покрывает случай
+Installed in `.claude/skills/`, invoke via the `Skill` tool when working on the relevant topic:
+- `symfony:api-platform-dto-resources` — mapping entity → API DTO via Symfony Object Mapper (`#[Map]`, `stateOptions`); consult when applying the "DTO, not a raw array" rule from the Serialization section below
+- `symfony:api-platform-filters` — Parameters API (`QueryParameter`) and `#[ApiFilter]` for State Providers
+- `symfony:api-platform-state-providers` — `ProviderInterface`/`ProcessorInterface` patterns
+- `php-best-practices` — general PSR/SOLID fallback when nothing more specific covers the case
 
 ## Inputs / Outputs
 **Accepts:** Implementation Plan from Architect
@@ -57,7 +57,7 @@ The only agent that makes changes in application code. Strictly follows the plan
 - Full type hints: arguments and return types everywhere
 - **Use PHP 8.4 features:** native enums, `readonly`, constructor property promotion, attributes (`#[...]`), `match`, named args, union types, `final readonly class`
 - `final readonly class` for services, processors, providers, value objects. Entities — not `final` (Doctrine proxies).
-- DI: constructor injection, autowire. Сервисы с env-аргументами: явная регистрация в `src/<Module>/di.yaml`.
+- DI: constructor injection, autowire. Services with env arguments: explicit registration in `src/<Module>/di.yaml`.
 - `#[AsEventListener]`, `#[AsCommand]` — prefer attributes over YAML/PHP config where possible.
 
 ### Where logic goes (critical)
@@ -93,16 +93,16 @@ The only agent that makes changes in application code. Strictly follows the plan
 - Repositories thin (query logic only); no business logic in repositories
 - Avoid N+1: eager-load relations with `JOIN` / `addSelect()` in repository methods
 
-### Context7 — актуальная документация
-Используй Context7 при написании кода когда нужно уточнить точный API:
-- Атрибуты API Platform (`#[ApiResource]`, `#[ApiFilter]`, операции) — синтаксис 4.1
-- Symfony Security: expression language в `security`, `access_control`
-- Doctrine ORM 3: QueryBuilder, flush/remove поведение, типы колонок
-- `symfony/uid`: генерация и маппинг `UuidV7`
+### Context7 — up-to-date documentation
+Use Context7 while writing code when you need to verify the exact API:
+- API Platform attributes (`#[ApiResource]`, `#[ApiFilter]`, operations) — 4.1 syntax
+- Symfony Security: expression language in `security`, `access_control`
+- Doctrine ORM 3: QueryBuilder, flush/remove behavior, column types
+- `symfony/uid`: generation and mapping of `UuidV7`
 
-**Как использовать:**
-1. `mcp__context7__resolve-library-id` с именем библиотеки и вопросом
-2. `mcp__context7__query-docs` с выбранным ID и конкретным вопросом
+**How to use:**
+1. `mcp__context7__resolve-library-id` with the library name and your question
+2. `mcp__context7__query-docs` with the chosen ID and a specific question
 
 ### Migrations
 - Schema changes require a Doctrine migration in `migrations/`. Generate: `docker compose exec -T php bin/console doctrine:migrations:diff`

@@ -1,38 +1,42 @@
 # CLAUDE.md
 
 Guidance for Claude Code and the agent system when working in this repository.
-**Language:** communicate with the user in Russian; keep code, identifiers, and PHPDoc in English.
+
+## Language policy
+
+- **Everything Claude-facing is English only:** this file, `CODEMAP.md`, every `src/<Module>/CLAUDE.md`, and all `.claude/agents/*.md`. Code, identifiers, PHPDoc, commit messages, and agent reports are English too.
+- **Project documentation is bilingual and lives inside the repository:** `README.md` and everything under `docs/` are written in English **and** duplicated in Russian (a parallel `*.ru.md` file next to each English document). `agent-docs` maintains both in sync. Never write documentation outside the project tree.
 
 ## Project
 
-**API Platform + Symfony Modular Skeleton** — production-ready стартовый шаблон для модульных REST API-бэкендов. Это не готовое приложение, а «болванка»: настроенная инфраструктура (Docker/FrankenPHP/PostgreSQL/Mercure) + один демонстрационный модуль `src/Example/`, который удаляется в реальном проекте и заменяется своими.
+**API Platform + Symfony Modular Skeleton** — a production-ready starter template for modular REST API backends. It is not a finished application but a skeleton: configured infrastructure (Docker/FrankenPHP/PostgreSQL/Mercure) plus one demonstration module `src/Example/`, which is deleted in a real project and replaced with your own.
 
-Из этого скелета поднимают новые сервисы. Задача агентной системы — вести разработку новых модулей и фич в этом (и производных от него) репозиториях по единым конвенциям команды.
+New services are bootstrapped from this skeleton. The agent system exists to drive development of new modules and features in this repository (and repositories derived from it) under one set of team conventions.
 
 ## Stack
 
 - **PHP 8.4** (strict types), **Symfony 7.3**, **API Platform 4.1** (REST/JSON + OpenAPI)
 - **Doctrine ORM 3.5** + PostgreSQL 16
-- **Web-сервер:** FrankenPHP (Caddy, worker mode в проде) + **Mercure** (real-time)
-- **Auth:** Symfony Security component (предустановлен, но не сконфигурирован под конкретный провайдер — авторизация задаётся per-project). Роли/ownership — через operation-level `security` API Platform + `config/packages/security.yaml`.
-- **Tests:** **PHPUnit** через `vendor/bin/simple-phpunit` (`symfony/phpunit-bridge`) · **Static:** PHPStan level 6 · **Lint:** php-cs-fixer ^3 (`@Symfony`) + Rector ^1
-- **Runtime:** зависимости и миграции накатываются автоматически entrypoint-скриптом при старте контейнера.
+- **Web server:** FrankenPHP (Caddy, worker mode in prod) + **Mercure** (real-time)
+- **Auth:** Symfony Security component (pre-installed but not wired to a concrete provider — authentication is chosen per project). Roles/ownership are expressed via API Platform operation-level `security` + `config/packages/security.yaml`.
+- **Tests:** **PHPUnit** via `vendor/bin/simple-phpunit` (`symfony/phpunit-bridge`) · **Static:** PHPStan level 6 · **Lint:** php-cs-fixer ^3 (`@Symfony`) + Rector ^1
+- **Runtime:** dependencies and migrations are applied automatically by the entrypoint script on container start.
 
-### Чего в скелете НЕТ (важно — не предполагай наличие)
+### What the skeleton does NOT have (important — do not assume it exists)
 
-Пакеты ниже **не установлены**. Если фича их требует — это новая зависимость, которую `agent-architect` обязан явно обосновать и добавить в план (composer require), а не считать существующей:
+The packages below are **not installed**. If a feature needs one, it is a new dependency that `agent-architect` must explicitly justify and add to the plan (`composer require`), never treat as already present:
 
-- **Symfony Messenger** (нет асинхронной обработки из коробки)
-- **Symfony Workflow** (нет state-machine; статусы — обычными именованными методами сущности)
+- **Symfony Messenger** (no async processing out of the box)
+- **Symfony Workflow** (no state machine; statuses are plain named methods on the entity)
 - **JWT** (LexikJWT/refresh tokens), Gedmo Extensions (SoftDeleteable/Timestampable), Flysystem/S3, Symfony Mailer/Telegram notifier, Symfony Scheduler
 
-## Модульная архитектура
+## Modular architecture
 
-Код разбит на независимые модули в `src/`. Каждый модуль самодостаточен — сущности, репозитории, API-слой, сервисы, конфигурация.
+Code is split into independent modules under `src/`. Each module is self-contained — entities, repositories, API layer, services, configuration.
 
 ```
 src/
-├── Example/    # Демонстрационный модуль (удалить в реальном проекте)
+├── Example/    # Demonstration module (delete in a real project)
 │   ├── Entity/
 │   ├── Repository/
 │   ├── Service/
@@ -42,97 +46,97 @@ src/
 └── Kernel.php
 ```
 
-Каждый содержательный модуль должен иметь свой **`src/<Module>/CLAUDE.md`** с деталями (см. `src/Example/CLAUDE.md` как образец/шаблон).
+Every substantive module must have its own **`src/<Module>/CLAUDE.md`** with the details (see `src/Example/CLAUDE.md` as the reference/template).
 
-### Config-файлы модуля (автозагрузка)
+### Module config files (auto-loading)
 
-`config/services.php` автоматически подхватывает из **каждого** модуля файлы `di`, `doctrine`, `api_platform` в форматах `.php/.xml/.yaml/.yml`, плюс их env-варианты `{name}_{env}` (например, `di_test.yaml`). Скелет использует **YAML**.
+`config/services.php` automatically imports, from **each** module, the files `di`, `doctrine`, `api_platform` in `.php/.xml/.yaml/.yml`, plus their env variants `{name}_{env}` (e.g. `di_test.yaml`). The skeleton uses **YAML**.
 
-| Файл                         | Назначение                                    |
-|------------------------------|-----------------------------------------------|
-| `src/<Module>/di.yaml`       | Регистрация сервисов модуля (autowire/autoconfigure, exclude `Entity/`) |
-| `src/<Module>/doctrine.yaml` | ORM mapping модуля (если нужен явный)          |
-| `src/<Module>/api_platform.yaml` | Пути маппинга ресурсов модуля для API Platform |
-| `src/<Module>/*_test.yaml`   | Переопределения в тестовом окружении           |
+| File                          | Purpose                                        |
+|-------------------------------|------------------------------------------------|
+| `src/<Module>/di.yaml`        | Module service registration (autowire/autoconfigure, exclude `Entity/`) |
+| `src/<Module>/doctrine.yaml`  | Module ORM mapping (when an explicit one is needed) |
+| `src/<Module>/api_platform.yaml` | Resource mapping paths for the module          |
+| `src/<Module>/*_test.yaml`    | Overrides in the test environment              |
 
-> **Только `di` / `doctrine` / `api_platform` автозагружаются per-module.** Security, роутинг и прочее — глобальные (`config/packages/`, `config/routes/`). Нет per-module `messenger.php`/`workflow.php`/`security.php` (в отличие от более крупных наших проектов — здесь этих подсистем нет).
+> **Only `di` / `doctrine` / `api_platform` are auto-loaded per module.** Security, routing, and everything else are global (`config/packages/`, `config/routes/`). There is no per-module `messenger.php`/`workflow.php`/`security.php` (unlike our larger projects — those subsystems do not exist here).
 
-## Навигация (где что искать)
+## Navigation (where to look)
 
-- **`CODEMAP.md`** (корень) — карта «фича → где искать», первая точка входа
-- **`docs/ARCHITECTURE.md`** — модульная архитектура
-- **`docs/BEST_PRACTICES.md`** — coding standards, примеры
-- **`docs/MODULE_DEVELOPMENT.md`** — как создавать модуль
-- **`docs/GETTING_STARTED.md`** — запуск проекта
-- **`docs/specs/<slug>/spec.md`** + **`plan.md`** — артефакты задач (создаются агентами)
-- **`src/<Module>/CLAUDE.md`** — специфика конкретного модуля
+- **`CODEMAP.md`** (root) — feature → where to look; first entry point
+- **`docs/ARCHITECTURE.md`** — modular architecture
+- **`docs/BEST_PRACTICES.md`** — coding standards, examples
+- **`docs/MODULE_DEVELOPMENT.md`** — how to create a module
+- **`docs/GETTING_STARTED.md`** — running the project
+- **`docs/specs/<slug>/spec.md`** + **`plan.md`** — task artifacts (created by agents)
+- **`src/<Module>/CLAUDE.md`** — specifics of a concrete module
 
-## Архитектура — основные правила
+## Architecture — core rules
 
-### Где живёт логика
+### Where logic lives
 
-- **State Processor** (`src/<Module>/ApiPlatform/State/Processor/`) — точка входа для HTTP-запросов с бизнес-логикой. Получает Input/сущность, вызывает Service, персистит, возвращает результат.
-- **State Provider** (`src/<Module>/ApiPlatform/State/Provider/`) — кастомные запросы для чтения (фильтрация, пагинация, вычисляемые поля).
-- **Service** (`src/<Module>/Service/`) — доменная логика, не привязанная к HTTP-слою. Процессоры — тонкие оркестраторы поверх сервисов.
-- **Controllers** — только для нетипичных не-API-Platform эндпоинтов. Доменную логику туда не класть.
-- Для простого CRUD, где нет доменной логики, достаточно дефолтных операций API Platform на сущности + Doctrine (как в `Example`) — не плоди процессор без необходимости.
+- **State Processor** (`src/<Module>/ApiPlatform/State/Processor/`) — entry point for HTTP requests with business logic. Takes Input/entity, calls a Service, persists, returns the result.
+- **State Provider** (`src/<Module>/ApiPlatform/State/Provider/`) — custom reads (filtering, pagination, computed fields).
+- **Service** (`src/<Module>/Service/`) — domain logic not tied to the HTTP layer. Processors are thin orchestrators over services.
+- **Controllers** — only for atypical non-API-Platform endpoints. Do not put domain logic there.
+- For simple CRUD with no domain logic, the default API Platform operations on the entity + Doctrine are enough (as in `Example`) — do not add a processor without need.
 
-### Межмодульная связь
+### Inter-module communication
 
-Модули общаются через **события** (EventDispatcher + `#[AsEventListener]`), а не через прямые cross-module зависимости сервисов. Допустимое исключение — ссылка на shared entity другого модуля (например, `author`).
+Modules communicate via **events** (EventDispatcher + `#[AsEventListener]`), not via direct cross-module service dependencies. The allowed exception is referencing another module's shared entity (e.g. an `author`).
 
-### Сущности
+### Entities
 
-- **Мутации с доменным смыслом — через именованные методы** (`publish()`, `approve()`, `rename()`), а не через голые сеттеры. Простые data-holder поля стартовой заготовки могут иметь сеттеры (см. `Example` — сгенерированный стаб).
-- **Первичные ключи:** демо-модуль `Example` использует `int IDENTITY` (auto-increment). Для новых модулей предпочтителен **UUID v7** (`Symfony\Component\Uid\UuidV7`, генерируется в конструкторе приложения — `symfony/uid` установлен) там, где нужен неугадываемый/распределённый идентификатор; выбор фиксируется архитектором в плане.
-- `DateTimeImmutable` для timestamp-полей (`Types::DATETIME_IMMUTABLE`), UTC.
-- Валидация — атрибуты `Symfony\Component\Validator\Constraints` на полях/DTO.
+- **Mutations with domain meaning go through named methods** (`publish()`, `approve()`, `rename()`), not bare setters. Plain data-holder fields of a starter stub may have setters (see `Example` — a generated stub).
+- **Primary keys:** the demo module `Example` uses `int IDENTITY` (auto-increment). For new modules, **UUID v7** (`Symfony\Component\Uid\UuidV7`, generated in the application constructor — `symfony/uid` is installed) is preferred where an unguessable/distributed identifier is needed; the choice is recorded by the architect in the plan.
+- `DateTimeImmutable` for timestamp fields (`Types::DATETIME_IMMUTABLE`), UTC.
+- Validation via `Symfony\Component\Validator\Constraints` attributes on fields/DTOs.
 
-## Авторизация
+## Authorization
 
-- Symfony Security предустановлен, но провайдер/файрвол под конкретный проект не сконфигурирован — конкретную модель аутентификации выбирают при старте проекта из скелета.
-- **Правила доступа** задаются двумя способами: operation-level `security` expression прямо на операции API Platform (`#[Get(security: "...")]`) и/или `access_control` в `config/packages/security.yaml`.
-- **Ownership** — expression вида `object.getOwner() == user` на мутирующей операции. Security-check может вернуть **403 или 404** — в тестах проверяй `assertContains($code, [403, 404])`.
+- Symfony Security is pre-installed, but the provider/firewall for a concrete project is not wired — the concrete authentication model is chosen when bootstrapping a project from the skeleton.
+- **Access rules** are set two ways: an operation-level `security` expression directly on the API Platform operation (`#[Get(security: "...")]`) and/or `access_control` in `config/packages/security.yaml`.
+- **Ownership** — an expression like `object.getOwner() == user` on a mutating operation. A security check may return **403 or 404** — in tests assert `assertContains($code, [403, 404])`.
 
 ## Conventions
 
-- `declare(strict_types=1);` в каждом PHP-файле; полные type hints на аргументах и возвратах.
-- **PHP 8.4:** нативные enums, attributes, `readonly`, constructor property promotion, `match`, named args, union types. Используй всё.
-- `final readonly class` для сервисов, процессоров, провайдеров, value objects. Entities — **не** `final` (Doctrine прокси).
-- **API Platform Input DTO** (`src/<Module>/ApiPlatform/Input/*.php`) — `final readonly class` с промотированными приватными свойствами (валидационные атрибуты и `#[Groups]` — на них), публичные геттеры; Serializer денормализует через конструктор.
-- PHPDoc **только** для типов, которые PHP не выражает: `@var array<string, mixed>`, `@return list<string>`, `@extends ServiceEntityRepository<Example>`.
-- Имена методов с намерением: `publish()`, `approve()`, `rename()` — не `process()`/`handle()`/`doWork()`.
-- PSR-12 / `@Symfony` форматирование. Без описательных комментариев — код самодокументирующий.
-- **Данные, которые куда-то передаются (JSON-payload, Mercure-update, лог-строка) — типизированный DTO (`final readonly class`), не «голый» ассоциативный массив.** Сериализация — через `Symfony\Component\Serializer\SerializerInterface::serialize()`, не ручной `json_encode()`.
+- `declare(strict_types=1);` in every PHP file; full type hints on arguments and return types.
+- **PHP 8.4:** native enums, attributes, `readonly`, constructor property promotion, `match`, named args, union types. Use them all.
+- `final readonly class` for services, processors, providers, value objects. Entities are **not** `final` (Doctrine proxies).
+- **API Platform Input DTO** (`src/<Module>/ApiPlatform/Input/*.php`) — a `final readonly class` with promoted private properties (validation attributes and `#[Groups]` on them), public getters; the Serializer denormalizes through the constructor.
+- PHPDoc **only** for types PHP cannot express: `@var array<string, mixed>`, `@return list<string>`, `@extends ServiceEntityRepository<Example>`.
+- Intent-revealing method names: `publish()`, `approve()`, `rename()` — not `process()`/`handle()`/`doWork()`.
+- PSR-12 / `@Symfony` formatting. No descriptive comments — the code is self-documenting.
+- **Data handed off somewhere (a JSON payload, a Mercure update, a log line) is a typed DTO (`final readonly class`), not a bare associative array.** Serialize via `Symfony\Component\Serializer\SerializerInterface::serialize()`, not hand-rolled `json_encode()`.
 
 ## Database
 
-- PostgreSQL 16, UTC. `snake_case` таблицы/колонки.
-- `DateTimeImmutable` для timestamp-полей.
-- Индексы на поля в `WHERE`/`ORDER BY`, на FK. Уникальные индексы — там, где уникальность — инвариант.
-- Все изменения схемы — через **Doctrine-миграции** в `migrations/`. Генерация: `bin/console doctrine:migrations:diff`. **Агенты миграции не запускают** (`migrate`) — создают файл и отдают на ревью (в проде миграции накатывает entrypoint при деплое).
-- Doctrine 3: `$em->getRepository()` устарел — инжектируй репозиторий через DI.
+- PostgreSQL 16, UTC. `snake_case` tables/columns.
+- `DateTimeImmutable` for timestamp fields.
+- Indexes on columns in `WHERE`/`ORDER BY`, on FKs. Unique indexes where uniqueness is an invariant.
+- All schema changes go through **Doctrine migrations** in `migrations/`. Generate with `bin/console doctrine:migrations:diff`. **Agents do not run migrations** (`migrate`) — they create the file and hand it off for review (in prod the entrypoint applies migrations on deploy).
+- Doctrine 3: `$em->getRepository()` is deprecated — inject the repository via DI.
 
 ## Commands
 
 ```bash
-# Тесты
+# Tests
 docker compose exec -T php vendor/bin/simple-phpunit
 docker compose exec -T php vendor/bin/simple-phpunit tests/Integration/Example/ExampleTest.php
 docker compose exec -T php vendor/bin/simple-phpunit --filter testName
 
-# Статанализ (level 6)
+# Static analysis (level 6)
 docker compose exec -T php vendor/bin/phpstan analyse
 
-# Линт (агенты — dry-run; fix только по запросу)
+# Lint (agents run dry-run; fix only on request)
 docker compose exec -T php vendor/bin/php-cs-fixer fix --dry-run --diff
 docker compose exec -T php vendor/bin/rector process --dry-run
 
-# Только изменённые файлы (петля агента)
+# Changed files only (agent loop)
 FILES=$(git diff --name-only HEAD -- '*.php' | tr '\n' ' ')
 [ -n "$FILES" ] && docker compose exec -T php vendor/bin/php-cs-fixer fix --dry-run --diff $FILES || true
 
-# Миграции (только генерируем — migrate запускает entrypoint/пользователь)
+# Migrations (generate only — migrate is run by the entrypoint/user)
 docker compose exec -T php bin/console doctrine:migrations:diff
 docker compose exec -T php bin/console doctrine:schema:validate
 
@@ -143,31 +147,31 @@ docker compose exec -T php bin/console debug:router
 
 ## Git workflow
 
-- Ветка от `main`: `feature/<slug>` для фич, `fix/<slug>` для багов.
-- Commit/push — только когда просит пользователь.
-- **Ремоут-агностично.** Это шаблон: у производного репозитория может быть GitHub-ремоут, GitLab, или его вовсе нет. Не хардкодь GitLab-борд/лейблы. Если ремоут есть и пользователь просит — открывай PR (`gh` для GitHub); иначе оставляй ветку локально и отдавай дифф + сводку.
-- Перед сдачей: PHPStan чистый, cs-fixer чистый, тесты зелёные, миграция сгенерирована (если менялась схема), документация синхронизирована.
+- Branch from `main`: `feature/<slug>` for features, `fix/<slug>` for bugs.
+- Commit/push only when the user asks.
+- **Remote-agnostic.** This is a template: a derived repo may have a GitHub remote, a GitLab remote, or none. Do not hardcode a GitLab board/labels. If a remote exists and the user asks, open a PR (`gh` for GitHub); otherwise leave the branch local and hand off the diff + summary.
+- Before handoff: PHPStan clean, cs-fixer clean, tests green, migration generated (if the schema changed), documentation synced (both language copies).
 
 ## Specification Driven Development
 
-Перед реализацией новой фичи — сначала спека, потом код.
+Before implementing a new feature — spec first, then code.
 
-1. Найди/создай `docs/specs/<slug>/spec.md`
-2. Уточни acceptance criteria
-3. Напиши тест на поведение из спеки
-4. Реализуй код до прохождения теста
-5. Обнови спеку, если что-то изменилось
+1. Find/create `docs/specs/<slug>/spec.md`
+2. Clarify acceptance criteria
+3. Write a test for the behavior from the spec
+4. Implement code until the test passes
+5. Update the spec if anything changed
 
 ## Agent system (`.claude/agents/`)
 
-Мультиагентный цикл ведёт задачу от формулировки до проверенного результата:
+A multi-agent cycle drives a task from statement to a verified result:
 
-`orchestrator` → `spec` → `architect` → (`architecture-critic` на высокоставочном плане) → `coder` → параллельное ревью (`tester` + `mr-reviewer` + `quality-reviewer`, плюс `database`/`security` по флагу из плана) → (`redteam` на верхнем уровне риска) → `validator` (единственный выдаёт PASS/FAIL/BLOCKED) → `docs` (после PASS, не блокирует).
+`orchestrator` → `spec` → `architect` → (`architecture-critic` on a high-stakes plan) → `coder` → parallel review (`tester` + `mr-reviewer` + `quality-reviewer`, plus `database`/`security` per the plan flag) → (`redteam` at the top of the risk scale) → `validator` (the only one that issues PASS/FAIL/BLOCKED) → `docs` (after PASS, non-blocking).
 
-- `spec`/`architect` сохраняют артефакты в `docs/specs/<slug>/spec.md` и `plan.md`.
-- `architecture-critic` и `redteam` — **свежие adversarial-инстансы**, только на высокоставочной работе (ownership/авторизация, целостность данных, идемпотентность мутаций, изменения схемы). Не выдают PASS/FAIL.
-- `coder` — единственный, кто меняет прод-код; `tester` пишет PHPUnit-тесты.
-- `logs` расследует ошибки по стектрейсам/логам.
-- `docs` — финальный шаг после `Status: PASS`: сверяет изменения и актуализирует **собственную документацию репозитория** (`README.md` + `docs/`) по опенсорсной практике — правит по месту, а не ведёт changelog. Чисто технические изменения без документационной дельты пропускает. Сдачу задачи не блокирует.
+- `spec`/`architect` save artifacts to `docs/specs/<slug>/spec.md` and `plan.md`.
+- `architecture-critic` and `redteam` are **fresh adversarial instances**, used only on high-stakes work (ownership/authorization, data integrity, mutation idempotency, schema changes). They do not issue PASS/FAIL.
+- `coder` is the only one that changes production code; `tester` writes PHPUnit tests.
+- `logs` investigates errors from stack traces/logs.
+- `docs` is the final step after `Status: PASS`: it reconciles the change and updates the **repository's own documentation** (`README.md` + `docs/`, both English and the Russian duplicate) the open-source way — editing in place, not keeping a changelog. Purely technical changes with no documentation delta are skipped. It does not block handoff.
 
-Модели/усилие каждого агента заданы в его frontmatter; общение с пользователем и отчёты — на русском, код — на английском.
+Each agent's model/effort is set in its frontmatter. All agent files and reports are in English; project documentation is bilingual (English + Russian) per the Language policy above.

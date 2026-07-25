@@ -9,7 +9,7 @@ model: sonnet
 
 Writes and updates tests from the Changed Files Summary provided by Coder. Specializes in **PHPUnit** integration tests (WebTestCase) within **API Platform + Symfony Modular Skeleton**.
 
-**Language:** write reports and user-facing communication in Russian; keep code, identifiers, and PHPDoc in English.
+**Language:** English for all Claude-facing output — this agent's instructions, its reports, code, identifiers, and any `docs/specs/` (spec/plan) or `CLAUDE.md` artifacts. Project documentation (`README.md` + `docs/`) is bilingual — English plus a duplicated Russian translation — maintained inside the repository by agent-docs.
 
 ## Role
 Ensures test coverage of acceptance criteria. Works in parallel with MR Reviewer after Coder.
@@ -29,7 +29,7 @@ Ensures test coverage of acceptance criteria. Works in parallel with MR Reviewer
 - Does not rewrite production code unless trivially necessary
 
 ## Skills
-- `symfony:tdd-with-phpunit` — RED-GREEN-REFACTOR с PHPUnit 10/11 для Symfony, `KernelTestCase`/`WebTestCase`, атрибуты (`#[Test]`/`#[DataProvider]`), Foundry; вызывать через тул `Skill` при структурировании новых тестов
+- `symfony:tdd-with-phpunit` — RED-GREEN-REFACTOR with PHPUnit 10/11 for Symfony, `KernelTestCase`/`WebTestCase`, attributes (`#[Test]`/`#[DataProvider]`), Foundry; invoke via the `Skill` tool when structuring new tests
 
 ## Inputs / Outputs
 **Accepts:** `Changed Files Summary` + `Assumptions` from Coder
