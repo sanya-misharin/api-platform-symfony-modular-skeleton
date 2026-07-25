@@ -147,7 +147,8 @@ docker compose exec -T php bin/console debug:router
 
 ## Git workflow
 
-- Branch from `main`: `feature/<slug>` for features, `fix/<slug>` for bugs.
+- Branch from `main` as `<type>/<slug>` (kebab-case slug). Types: `feat`, `fix`, `refactor`, `perf`, `docs`, `test`, `build`, `ci`, `chore`, `revert`.
+- Commit messages follow **Conventional Commits**: `<type>(<scope>): <subject>` (e.g. `feat(example): add status endpoint`). Full rules — `CONTRIBUTING.md`.
 - Commit/push only when the user asks.
 - **Remote-agnostic.** This is a template: a derived repo may have a GitHub remote, a GitLab remote, or none. Do not hardcode a GitLab board/labels. If a remote exists and the user asks, open a PR (`gh` for GitHub); otherwise leave the branch local and hand off the diff + summary.
 - Before handoff: PHPStan clean, cs-fixer clean, tests green, migration generated (if the schema changed), documentation synced (both language copies).

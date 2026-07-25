@@ -10,8 +10,18 @@ indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
 
+# Docker Compose files use 2-space YAML
 [{compose.yaml,compose.*.yaml}]
 indent_size = 2
 
+# GitHub Actions workflows and issue forms conventionally use 2-space YAML
+[.github/**.{yml,yaml}]
+indent_size = 2
+
+# Makefiles require real tabs
+[Makefile]
+indent_style = tab
+
+# Preserve hard line breaks in Markdown (two trailing spaces)
 [*.md]
 trim_trailing_whitespace = false

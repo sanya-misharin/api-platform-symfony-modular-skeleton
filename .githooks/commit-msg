@@ -1,0 +1,38 @@
+#!/bin/sh
+#
+# Validate the commit message against Conventional Commits.
+# Enable locally once with:  git config core.hooksPath .githooks
+#
+# Format:  <type>(<optional scope>)<optional !>: <subject>
+# Types:   feat fix refactor perf docs test build ci chore revert style
+# Example: feat(example): add status endpoint
+
+msg_file="$1"
+subject="$(head -n1 "$msg_file")"
+
+# Allow machine-generated messages through untouched.
+case "$subject" in
+	"Merge "*|"Revert "*|"fixup! "*|"squash! "*|"Initial commit") exit 0 ;;
+esac
+
+pattern='^(feat|fix|refactor|perf|docs|test|build|ci|chore|revert|style)(\([a-z0-9._/-]+\))?(!)?: .+'
+
+if ! printf '%s' "$subject" | grep -Eq "$pattern"; then
+	echo "✗ Commit message does not follow Conventional Commits."
+	echo ""
+	echo "  Got:      $subject"
+	echo "  Expected: <type>(<scope>): <subject>"
+	echo "  Types:    feat fix refactor perf docs test build ci chore revert style"
+	echo "  Example:  feat(example): add status endpoint"
+	echo ""
+	echo "  See CONTRIBUTING.md → Commits."
+	exit 1
+fi
+
+# Soft length check on the subject line.
+subject_len="$(printf '%s' "$subject" | wc -c | tr -d ' ')"
+if [ "$subject_len" -gt 72 ]; then
+	echo "⚠ Subject line is ${subject_len} chars (>72). Consider shortening; body goes below a blank line."
+fi
+
+exit 0

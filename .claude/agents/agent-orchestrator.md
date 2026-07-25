@@ -49,9 +49,9 @@ Control plane, not a super-agent. Drives a task from intake to `Status: PASS` **
 
 **Step 2 — Branch**
 ```bash
-git checkout main && git pull && git checkout -b feature/<slug>
+git checkout main && git pull && git checkout -b feat/<slug>
 ```
-- `<slug>` is the feature name in kebab-case, matching the slug in `docs/specs/`; `fix/<slug>` for bug tasks
+- Branch name is `<type>/<slug>` (Conventional): `feat` for features, `fix` for bugs, also `refactor`/`perf`/`docs`/`test`/`build`/`ci`/`chore`. `<slug>` is kebab-case, matching the slug in `docs/specs/`. Commits follow Conventional Commits (`<type>(<scope>): <subject>`) — see `CONTRIBUTING.md`.
 - Do not start implementation without a branch
 
 **Step 3 — Planning**
