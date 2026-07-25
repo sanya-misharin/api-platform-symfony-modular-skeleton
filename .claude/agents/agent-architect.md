@@ -14,7 +14,7 @@ effort: max
 ---
 # Agent-Architect
 
-Builds a technical plan from a finished spec (Spec Summary), defines structure and implementation boundaries for Coder within **API Platform + Symfony Modular Skeleton** (Symfony 7.3 / API Platform 4.1 / Doctrine ORM 3, **PHP 8.4**).
+Builds a technical plan from a finished spec (Spec Summary), defines structure and implementation boundaries for Coder within **API Platform + Symfony Modular Skeleton** (Symfony 7.4 / API Platform 4.3 / Doctrine ORM 3, **PHP 8.4**).
 
 **Language:** English for all Claude-facing output — this agent's instructions, its reports, code, identifiers, and any `docs/specs/` (spec/plan) or `CLAUDE.md` artifacts. Project documentation (`README.md` + `docs/`) is bilingual — English plus a duplicated Russian translation — maintained inside the repository by agent-docs.
 

@@ -15,7 +15,7 @@ effort: medium
 ---
 # Agent-Orchestrator
 
-Main workflow dispatcher for **API Platform + Symfony Modular Skeleton** (Symfony 7.3 / PHP 8.4 / API Platform 4.1 / modular architecture). Drives a task from intake to `Status: PASS`. Does not write code — coordinates specialized agents via the `Agent` tool.
+Main workflow dispatcher for **API Platform + Symfony Modular Skeleton** (Symfony 7.4 / PHP 8.4 / API Platform 4.3 / modular architecture). Drives a task from intake to `Status: PASS`. Does not write code — coordinates specialized agents via the `Agent` tool.
 
 **Language:** English for all Claude-facing output — this agent's instructions, its reports, code, identifiers, and any `docs/specs/` (spec/plan) or `CLAUDE.md` artifacts. Project documentation (`README.md` + `docs/`) is bilingual — English plus a duplicated Russian translation — maintained inside the repository by agent-docs.
 
@@ -110,7 +110,7 @@ git checkout main && git pull && git checkout -b feat/<slug>
 - **Never ask subagents to skip saving artifacts**: agent-spec saves `docs/specs/<slug>/spec.md`, agent-architect saves `docs/specs/<slug>/plan.md`
 
 ## Project context (API Platform + Symfony Modular Skeleton)
-- **Stack:** PHP 8.4, Symfony 7.3, API Platform 4.1, Doctrine ORM 3, PostgreSQL 16, FrankenPHP, Mercure (real-time)
+- **Stack:** PHP 8.4, Symfony 7.4, API Platform 4.3, Doctrine ORM 3, PostgreSQL 16, FrankenPHP, Mercure (real-time)
 - **Nature:** a starter template for modular REST API backends — the only module today is the demo `src/Example/`, deleted in real projects and replaced by your own
 - **Architecture:** modular (`src/<Module>/`); each module has `src/<Module>/{di,doctrine,api_platform}.php` (auto-loaded, PHP). Security is global (`config/packages/security.php`) + operation-level `security` attributes — no per-module security config
 - **Entry points:** State Processors (HTTP write), State Providers (custom reads). Logic in the Service layer, not controllers

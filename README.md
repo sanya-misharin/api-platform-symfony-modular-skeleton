@@ -2,7 +2,7 @@
 
 # API Platform + Symfony Modular Skeleton
 
-🚀 Production-ready starter template for building modular REST API backends with **Symfony 7.3** and **API Platform 4.1
+🚀 Production-ready starter template for building modular REST API backends with **Symfony 7.4** and **API Platform 4.3
 **.
 
 ## ✨ Features
@@ -271,9 +271,9 @@ docker compose logs -f php
 ## 📋 Tech Stack
 
 - **PHP 8.4** with strict types
-- **Symfony 7.3** - Framework
-- **API Platform 4.1** - REST API generation
-- **Doctrine ORM 3.5** - Database abstraction
+- **Symfony 7.4** - Framework
+- **API Platform 4.3** - REST API generation
+- **Doctrine ORM 3.6** - Database abstraction
 - **PostgreSQL 16** - Database
 - **FrankenPHP** - Modern PHP application server
 - **Caddy** - Web server with automatic HTTPS
