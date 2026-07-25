@@ -412,17 +412,25 @@ public function setRepository(YourRepository $repository): void
 
 ### Конфигурация DI модуля
 
-```yaml
-# src/YourModule/di.yaml
-services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
+`src/YourModule/di.php`:
 
-    App\YourModule\:
-        resource: '../'
-        exclude:
-            - '../Entity/'
+```php
+<?php
+
+declare(strict_types=1);
+
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
+return static function (ContainerConfigurator $container): void {
+    $services = $container->services();
+
+    $services->defaults()
+        ->autowire()
+        ->autoconfigure();
+
+    $services->load('App\\YourModule\\', './')
+        ->exclude(['./Entity/']);
+};
 ```
 
 ## Конвенции именования

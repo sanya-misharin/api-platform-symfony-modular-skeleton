@@ -41,7 +41,7 @@ git diff HEAD -- '*.php'               # uncommitted changes
 - Inter-module communication via EventDispatcher events, not direct cross-module service injection (shared-entity reference such as `author` is the allowed exception)
 
 ### Authorization & ownership
-- Every new operation has an explicit operation-level `security:` expression or is covered by `config/packages/security.yaml` `access_control`
+- Every new operation has an explicit operation-level `security:` expression or is covered by `config/packages/security.php` `access_control`
 - Ownership checks (`object.getOwner() == user`) are present on user-scoped mutating operations
 - Role gates (`ROLE_ADMIN` / `ROLE_USER`) enforced on privileged operations
 - A denied security check may return **403 or 404** — expectations account for both
@@ -72,7 +72,7 @@ git diff HEAD -- '*.php'               # uncommitted changes
 ### Contracts
 - New API resource/operation: serialization groups + `security` attribute
 - Changed entity fields: serialization groups updated (no data leak via over-broad groups)
-- Module config lives in `src/<Module>/{di,doctrine,api_platform}.yaml`, not leaked into global `config/`
+- Module config lives in `src/<Module>/{di,doctrine,api_platform}.php`, not leaked into global `config/`
 
 ## Severity levels
 - **Critical:** business logic in Controller; ownership check missing on user-scoped operation; schema changed without migration; PHP 7.x syntax used

@@ -80,7 +80,7 @@ Use the templates — [bug report](.github/ISSUE_TEMPLATE/bug_report.md) or [fea
 
 ## Module conventions (quick reference)
 
-- Each module is self-contained under `src/<Module>/` with its own `di.yaml` / `api_platform.yaml` and a `src/<Module>/CLAUDE.md`.
+- Each module is self-contained under `src/<Module>/` with its own `di.php` / `api_platform.php` and a `src/<Module>/CLAUDE.md`.
 - Business logic lives in a **Service**; a **State Processor** is the thin HTTP entry point; custom reads go in a **State Provider**.
 - `declare(strict_types=1);` everywhere; `final readonly class` for services/processors/providers; entities are not `final`.
 - Full details: [docs/MODULE_DEVELOPMENT.md](docs/MODULE_DEVELOPMENT.md) and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).

@@ -7,9 +7,9 @@ A "feature → where to look" map — the first entry point before a task. Per-m
 ## Entry points and loading
 
 - **HTTP entry:** `public/index.php` → `src/Kernel.php` (FrankenPHP).
-- **API routing:** `config/routes/api_platform.yaml` (all API Platform resources); other routing — `config/routes/`, `config/routes.php`.
-- **Module DI/auto-loading:** `config/services.php` — imports, from **each** `src/**/`, the files `di`, `doctrine`, `api_platform` (`.php/.xml/.yaml/.yml`) plus env variants `{name}_{env}`. The skeleton uses YAML.
-- **Bundles:** `config/bundles.php`. **Packages (global config):** `config/packages/*.yaml` (doctrine, api_platform, security, mercure, nelmio_cors, monolog, framework, …).
+- **API routing:** `config/routes/api_platform.php` (all API Platform resources); other routing — `config/routes/`, `config/routes.php`.
+- **Module DI/auto-loading:** `config/services.php` — imports, from **each** `src/**/`, the files `di`, `doctrine`, `api_platform` (`.php/.xml/.yaml/.yml`) plus env variants `{name}_{env}`. The skeleton uses PHP config.
+- **Bundles:** `config/bundles.php`. **Packages (global config):** `config/packages/*.php` (doctrine, api_platform, security, mercure, nelmio_cors, monolog, framework, …).
 
 ## Module layers (which does what)
 
@@ -21,13 +21,13 @@ A "feature → where to look" map — the first entry point before a task. Per-m
 | Domain logic | `src/<Module>/Service/` | logic not tied to HTTP |
 | Input DTO | `src/<Module>/ApiPlatform/Input/` | when the request shape ≠ the entity |
 | Data access | `src/<Module>/Repository/` | queries; no business logic |
-| Module config | `src/<Module>/{di,doctrine,api_platform}.yaml` | service registration/mapping/resources |
+| Module config | `src/<Module>/{di,doctrine,api_platform}.php` | service registration/mapping/resources |
 
 For simple CRUD with no domain logic, `#[ApiResource]` on the entity + Doctrine is enough — no processor needed (see `Example`).
 
 ## Authorization
 
-- **Global rules:** `config/packages/security.yaml` (`access_control`, firewalls, providers — per project).
+- **Global rules:** `config/packages/security.php` (`access_control`, firewalls, providers — per project).
 - **Per-operation:** a `security` expression on the API Platform operation (`#[Get(security: "...")]`, `#[Post(securityPostDenormalize: "...")]`).
 - An ownership check may return **403 or 404** — account for this in tests.
 
@@ -35,17 +35,17 @@ For simple CRUD with no domain logic, `#[ApiResource]` on the entity + Doctrine 
 
 - **Entities/mapping:** `src/<Module>/Entity/` (`#[ORM\...]` attributes).
 - **Migrations:** `migrations/` (generate with `doctrine:migrations:diff`; `migrate` is not run by agents).
-- **Global Doctrine config:** `config/packages/doctrine.yaml` and `doctrine_migrations.yaml`.
+- **Global Doctrine config:** `config/packages/doctrine.php` and `doctrine_migrations.php`.
 
 ## Real-time
 
-- **Mercure:** `config/packages/mercure.yaml`; publishing updates — via API Platform (`mercure: true` on a resource) or `HubInterface`.
+- **Mercure:** `config/packages/mercure.php`; publishing updates — via API Platform (`mercure: true` on a resource) or `HubInterface`.
 
 ## Tests
 
 - **Unit:** `tests/Unit/<Module>/`. **Integration (API):** `tests/Integration/<Module>/` (extend `WebTestCase`).
 - Bootstrap: `tests/bootstrap.php`; config — `phpunit.xml.dist`. Run with `vendor/bin/simple-phpunit`.
-- The test environment is overridden by `src/<Module>/*_test.yaml` files (env `test`).
+- The test environment is overridden by `src/<Module>/*_test.php` files (env `test`).
 
 ## Feature → module
 

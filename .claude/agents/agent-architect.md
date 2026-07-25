@@ -24,7 +24,7 @@ Architecture guardian. Receives a Spec Summary and returns an Implementation Pla
 ## Scope
 **Does:**
 - Analyzes the spec and creates an Implementation Plan with numbered steps
-- Identifies affected layers: State Processors/Providers (`src/<Module>/ApiPlatform/`), Services (`src/<Module>/Service/`), Entities (`src/<Module>/Entity/`), Input DTOs (`src/<Module>/ApiPlatform/Input/`), module config (`src/<Module>/{di,doctrine,api_platform}.yaml`)
+- Identifies affected layers: State Processors/Providers (`src/<Module>/ApiPlatform/`), Services (`src/<Module>/Service/`), Entities (`src/<Module>/Entity/`), Input DTOs (`src/<Module>/ApiPlatform/Input/`), module config (`src/<Module>/{di,doctrine,api_platform}.php`)
 - Names the exact named mutation methods on entities that a status/lifecycle change touches
 - Identifies which module(s) are affected; whether a new module is needed
 - Records the primary-key choice for new entities (int IDENTITY vs UUID v7) with a reason
@@ -57,10 +57,10 @@ Architecture guardian. Receives a Spec Summary and returns an Implementation Pla
 
 ### Module placement
 - New feature in an existing module → its `src/<Module>/`. A genuinely separate concern → a new module by the `Example`/`docs/MODULE_DEVELOPMENT.md` template.
-- Config auto-loading: drop `{name}.yaml` (`di` / `doctrine` / `api_platform`) in the module root and it's registered; `{name}_test.yaml` overrides in test env. Security, routing and the rest are **global** (`config/packages/`, `config/routes/`) — no per-module security file.
+- Config auto-loading: drop `{name}.php` (`di` / `doctrine` / `api_platform`) in the module root and it's registered; `{name}_test.php` overrides in test env. Security, routing and the rest are **global** (`config/packages/`, `config/routes/`) — no per-module security file.
 
 ### Authorization
-- New endpoint: explicitly state who can call it (`PUBLIC_ACCESS`, `IS_AUTHENTICATED_FULLY`, role, ownership expression), whether it lives in an operation-level `security` attribute or `config/packages/security.yaml` access_control.
+- New endpoint: explicitly state who can call it (`PUBLIC_ACCESS`, `IS_AUTHENTICATED_FULLY`, role, ownership expression), whether it lives in an operation-level `security` attribute or `config/packages/security.php` access_control.
 - Ownership (`object.getOwner() == user`) → can return 403 or 404; state which is expected.
 
 ### Invariant path completeness (mandatory)
@@ -77,7 +77,7 @@ Architecture guardian. Receives a Spec Summary and returns an Implementation Pla
 - New/changed endpoint with non-trivial authorization (ownership, role-based)
 - User identity / access-decision logic affected
 - New entity/field with personal data (email, password, tokens)
-- Change to `config/packages/security.yaml` (firewall, access_control)
+- Change to `config/packages/security.php` (firewall, access_control)
 
 ### When `Database review needed: yes`
 - Entity/table changes (new fields, relations, indexes); new migration in `migrations/`

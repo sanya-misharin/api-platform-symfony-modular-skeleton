@@ -78,8 +78,8 @@
 │       ├── Repository/     # Doctrine repositories
 │       ├── ApiPlatform/    # API Platform processors/extensions
 │       ├── Service/        # Business logic
-│       ├── di.yaml         # Module DI configuration
-│       └── api_platform.yaml # Module API Platform config
+│       ├── di.php          # Module DI configuration
+│       └── api_platform.php # Module API Platform config
 ├── templates/              # Twig templates
 ├── tests/                  # Tests
 │   └── Unit/               # Unit tests
@@ -93,17 +93,24 @@
    mkdir -p src/YourModule/{Entity,Repository,Service,ApiPlatform}
    ```
 
-2. **Создайте конфигурацию DI** (`src/YourModule/di.yaml`):
-   ```yaml
-   services:
-       _defaults:
-           autowire: true
-           autoconfigure: true
+2. **Создайте конфигурацию DI** (`src/YourModule/di.php`):
+   ```php
+   <?php
 
-       App\YourModule\:
-           resource: '../'
-           exclude:
-               - '../Entity/'
+   declare(strict_types=1);
+
+   use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
+   return static function (ContainerConfigurator $container): void {
+       $services = $container->services();
+
+       $services->defaults()
+           ->autowire()
+           ->autoconfigure();
+
+       $services->load('App\\YourModule\\', './')
+           ->exclude(['./Entity/']);
+   };
    ```
 
 3. **Создайте сущность:**
@@ -170,9 +177,9 @@ docker compose logs -f php
 
 Проект использует **модульную конфигурацию DI**, которая автоматически загружает определения сервисов из каждого модуля:
 
-- `src/*/di.yaml` — определения сервисов
-- `src/*/doctrine.yaml` — конфигурация, специфичная для Doctrine
-- `src/*/api_platform.yaml` — конфигурация API Platform
+- `src/*/di.php` — определения сервисов
+- `src/*/doctrine.php` — конфигурация, специфичная для Doctrine
+- `src/*/api_platform.php` — конфигурация API Platform
 
 Сервисы автоматически регистрируются и настраиваются, когда вы размещаете эти файлы в каталогах своих модулей.
 

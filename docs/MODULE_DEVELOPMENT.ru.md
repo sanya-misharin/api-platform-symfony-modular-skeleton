@@ -16,9 +16,9 @@ src/YourModule/
 ├── ApiPlatform/         # State processors, providers, extensions
 ├── Messenger/           # Message handlers (optional)
 ├── Serializer/          # Custom normalizers/denormalizers (optional)
-├── di.yaml              # Dependency injection configuration
-├── doctrine.yaml        # Doctrine-specific configuration (optional)
-├── api_platform.yaml    # API Platform configuration (optional)
+├── di.php               # Dependency injection configuration
+├── doctrine.php         # Doctrine-specific configuration (optional)
+├── api_platform.php     # API Platform configuration (optional)
 └── routing.php          # Module routes (optional)
 ```
 
@@ -32,18 +32,25 @@ mkdir -p src/YourModule/{Entity,Repository,Service,ApiPlatform}
 
 ### Шаг 2: Создание конфигурации DI
 
-Создайте `src/YourModule/di.yaml`:
+Создайте `src/YourModule/di.php`:
 
-```yaml
-services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
+```php
+<?php
 
-    App\YourModule\:
-        resource: '../'
-        exclude:
-            - '../Entity/'
+declare(strict_types=1);
+
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
+return static function (ContainerConfigurator $container): void {
+    $services = $container->services();
+
+    $services->defaults()
+        ->autowire()
+        ->autoconfigure();
+
+    $services->load('App\\YourModule\\', './')
+        ->exclude(['./Entity/']);
+};
 ```
 
 Эта конфигурация:
@@ -300,30 +307,53 @@ final readonly class YourService
 
 ## Конфигурационные файлы модуля
 
-### doctrine.yaml
+### doctrine.php
 
-Создайте `src/YourModule/doctrine.yaml` для конфигурации, специфичной для Doctrine:
+Создайте `src/YourModule/doctrine.php` для конфигурации, специфичной для Doctrine:
 
-```yaml
-doctrine:
-    orm:
-        mappings:
-            YourModule:
-                type: attribute
-                dir: '%kernel.project_dir%/src/YourModule/Entity'
-                prefix: 'App\YourModule\Entity'
-                alias: YourModule
+```php
+<?php
+
+declare(strict_types=1);
+
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
+return static function (ContainerConfigurator $container): void {
+    $container->extension('doctrine', [
+        'orm' => [
+            'mappings' => [
+                'YourModule' => [
+                    'type' => 'attribute',
+                    'dir' => '%kernel.project_dir%/src/YourModule/Entity',
+                    'prefix' => 'App\\YourModule\\Entity',
+                    'alias' => 'YourModule',
+                ],
+            ],
+        ],
+    ]);
+};
 ```
 
-### api_platform.yaml
+### api_platform.php
 
-Создайте `src/YourModule/api_platform.yaml` для значений по умолчанию API Platform:
+Создайте `src/YourModule/api_platform.php` для значений по умолчанию API Platform:
 
-```yaml
-api_platform:
-    defaults:
-        extra_properties:
-            module: 'YourModule'
+```php
+<?php
+
+declare(strict_types=1);
+
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
+return static function (ContainerConfigurator $container): void {
+    $container->extension('api_platform', [
+        'defaults' => [
+            'extra_properties' => [
+                'module' => 'YourModule',
+            ],
+        ],
+    ]);
+};
 ```
 
 ### routing.php
@@ -451,7 +481,7 @@ class YourEntityTest extends ApiTestCase
 
 ### Сервисы не найдены
 
-Убедитесь, что `di.yaml` существует и следует правильному формату. Очистите кэш:
+Убедитесь, что `di.php` существует и следует правильному формату. Очистите кэш:
 
 ```bash
 docker compose exec php bin/console cache:clear

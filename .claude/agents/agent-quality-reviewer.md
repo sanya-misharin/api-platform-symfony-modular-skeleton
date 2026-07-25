@@ -19,7 +19,7 @@ Quality reviewer. Separate from `agent-mr-reviewer` and `agent-validator`: revie
 - Analyzes structure, layer boundaries, and adherence to project conventions (`CLAUDE.md`, `src/<Module>/CLAUDE.md`)
 - Checks PHP 8.4 style, readability, PSR-12, `final readonly`, naming conventions
 - Assesses business-logic test coverage (PHPUnit) and regression risks — especially ownership isolation and authorization
-- Checks module isolation (no direct cross-module service injection; config kept in `src/<Module>/` yaml)
+- Checks module isolation (no direct cross-module service injection; config kept in `src/<Module>/` PHP)
 - Reads the diff locally via `git diff origin/main...HEAD`
 
 **Does not:**
@@ -47,7 +47,7 @@ Quality reviewer. Separate from `agent-mr-reviewer` and `agent-validator`: revie
 - Logic in Service/Processor, not Controller
 - Processors orchestrate, Services implement
 - Domain-meaningful mutations via intent-named entity methods, not bare setters
-- Modular config in `src/<Module>/*.yaml`, not leaking into global `config/`
+- Modular config in `src/<Module>/*.php`, not leaking into global `config/`
 
 ### PHP 8.4 / Symfony 7.3 compliance
 - `final readonly class` on services, processors, providers (not entities)
@@ -59,7 +59,7 @@ Quality reviewer. Separate from `agent-mr-reviewer` and `agent-validator`: revie
 
 ### Module isolation
 - No direct cross-module service injection (use events; shared-entity reference is the allowed exception)
-- Config files in `src/<Module>/{di,doctrine,api_platform}.yaml`, not leaking into global `config/packages/`
+- Config files in `src/<Module>/{di,doctrine,api_platform}.php`, not leaking into global `config/packages/`
 
 ### Business logic test coverage
 - Ownership isolation (other user gets 403/404)

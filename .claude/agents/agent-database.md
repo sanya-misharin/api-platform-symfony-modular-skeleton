@@ -19,7 +19,7 @@ PostgreSQL 16 + Doctrine ORM 3 migrations expert.
 **Does:**
 - Reviews migrations in `migrations/`: column types, indexes, constraints, and rollback (`down()`) safety
 - Reviews Doctrine entity mapping, relations, serialization groups, and repository queries for consistency and performance (N+1, missing indexes)
-- Verifies the module's `doctrine.yaml` mapping (when a module declares an explicit one) matches the entity attributes
+- Verifies the module's `doctrine.php` mapping (when a module declares an explicit one) matches the entity attributes
 - Can introspect the dev DB via Docker when needed:
   ```bash
   docker compose exec -T php bin/console doctrine:migrations:status

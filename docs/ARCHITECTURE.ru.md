@@ -9,7 +9,7 @@
 **Модуль** — это связная единица кода, организованная вокруг конкретного бизнес-домена или фичи. Каждый модуль:
 
 - Живёт в `src/<ModuleName>/`
-- Имеет собственную DI-конфигурацию (`di.yaml` или `di.php`)
+- Имеет собственную DI-конфигурацию (`di.php`)
 - Содержит связанные сущности, сервисы, репозитории и API-ресурсы
 - Автоматически обнаруживается и загружается фреймворком
 - Может быть легко перемещён, переименован или удалён
@@ -24,7 +24,7 @@ src/YourModule/
 ├── ApiPlatform/         # State processors, extensions
 ├── Messenger/           # Message handlers (optional)
 ├── Serializer/          # Custom normalizers (optional)
-└── di.yaml              # Dependency injection configuration
+└── di.php               # Dependency injection configuration
 ```
 
 ## Преимущества модулей
@@ -60,25 +60,32 @@ $di->import('../src/**/{api_platform}.{php,xml,yaml,yml}');
 ```
 
 Это означает:
-- Положите `di.yaml` в любой модуль → сервисы регистрируются автоматически
-- Добавьте `doctrine.yaml` → загружаются кастомные типы/расширения
-- Включите `api_platform.yaml` → применяется конфигурация API
+- Положите `di.php` в любой модуль → сервисы регистрируются автоматически
+- Добавьте `doctrine.php` → загружаются кастомные типы/расширения
+- Включите `api_platform.php` → применяется конфигурация API
 
 ## Пример модуля
 
 Модуль `Example` демонстрирует этот паттерн:
 
-```yaml
-# src/Example/di.yaml
-services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
+```php
+<?php
+// src/Example/di.php
 
-    App\Example\:
-        resource: '../'
-        exclude:
-            - '../Entity/'
+declare(strict_types=1);
+
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
+return static function (ContainerConfigurator $container): void {
+    $services = $container->services();
+
+    $services->defaults()
+        ->autowire()
+        ->autoconfigure();
+
+    $services->load('App\\Example\\', './')
+        ->exclude(['./Entity/']);
+};
 ```
 
 Это автоматически регистрирует все сервисы модуля, кроме сущностей.
@@ -89,7 +96,7 @@ services:
 |--------|------------------|----------------|
 | Назначение | Бизнес-/доменный код | Инфраструктура/интеграция |
 | Область | Специфичен для проекта | Универсальный, переиспользуемый |
-| Сложность | Простой (только `di.yaml`) | Сложный (классы Bundle + Extension) |
+| Сложность | Простой (только `di.php`) | Сложный (классы Bundle + Extension) |
 | Использование | Изоляция фич | Расширения фреймворка |
 
 ## Лучшие практики
@@ -121,7 +128,7 @@ services:
 
 1. Определите границы фич
 2. Сгруппируйте связанный код по каталогам модулей
-3. Создайте `di.yaml` для каждого модуля
+3. Создайте `di.php` для каждого модуля
 4. Уберите глобальную регистрацию сервисов
 5. Проверьте изоляцию модулей
 6. Итеративно уточняйте границы

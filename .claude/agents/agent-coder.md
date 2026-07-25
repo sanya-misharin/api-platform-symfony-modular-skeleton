@@ -57,8 +57,8 @@ Installed in `.claude/skills/`, invoke via the `Skill` tool when working on the 
 - Full type hints: arguments and return types everywhere
 - **Use PHP 8.4 features:** native enums, `readonly`, constructor property promotion, attributes (`#[...]`), `match`, named args, union types, `final readonly class`
 - `final readonly class` for services, processors, providers, value objects. Entities — not `final` (Doctrine proxies).
-- DI: constructor injection, autowire. Services with env arguments: explicit registration in `src/<Module>/di.yaml`.
-- `#[AsEventListener]`, `#[AsCommand]` — prefer attributes over YAML/PHP config where possible.
+- DI: constructor injection, autowire. Services with env arguments: explicit registration in `src/<Module>/di.php`.
+- `#[AsEventListener]`, `#[AsCommand]` — prefer attributes over config files where possible.
 
 ### Where logic goes (critical)
 - **Entry point = State Processor** (`src/<Module>/ApiPlatform/State/Processor/`). Orchestrates: validate input, call Service, persist, return entity.
@@ -68,10 +68,10 @@ Installed in `.claude/skills/`, invoke via the `Skill` tool when working on the 
 - **Inter-module communication** via EventDispatcher events (`#[AsEventListener]`), not direct cross-module service calls.
 
 ### Module config
-- New service with env arg → register explicitly in `src/<Module>/di.yaml`
-- New ORM mapping override → `src/<Module>/doctrine.yaml`; new resource mapping path → `src/<Module>/api_platform.yaml`
-- Test-env overrides → `src/<Module>/*_test.yaml` (`di_test.yaml`, etc.)
-- **Access rules are global/operation-level, not per-module:** an operation-level `security` expression on the API Platform operation (`#[Get(security: "...")]`) and/or `access_control` in `config/packages/security.yaml`. There is no per-module `security.yaml`.
+- New service with env arg → register explicitly in `src/<Module>/di.php`
+- New ORM mapping override → `src/<Module>/doctrine.php`; new resource mapping path → `src/<Module>/api_platform.php`
+- Test-env overrides → `src/<Module>/*_test.php` (`di_test.php`, etc.)
+- **Access rules are global/operation-level, not per-module:** an operation-level `security` expression on the API Platform operation (`#[Get(security: "...")]`) and/or `access_control` in `config/packages/security.php`. There is no per-module `security.php`.
 
 ### Entities
 - Mutations via named methods (`publish()`, `approve()`, `reject()`), not bare setters. Simple data-holder fields of a starter stub may keep setters (see `Example`).
