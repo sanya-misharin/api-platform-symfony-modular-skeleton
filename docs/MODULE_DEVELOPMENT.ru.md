@@ -1,12 +1,12 @@
 [English](MODULE_DEVELOPMENT.md) · [Русский](MODULE_DEVELOPMENT.ru.md)
 
-# Module Development Guide
+# Руководство по разработке модулей
 
-This guide explains how to develop modules in the API Platform Symfony Modular Skeleton.
+Это руководство объясняет, как разрабатывать модули в API Platform Symfony Modular Skeleton.
 
-## Module Structure
+## Структура модуля
 
-Each module follows a consistent directory structure:
+Каждый модуль следует единообразной структуре каталогов:
 
 ```
 src/YourModule/
@@ -22,17 +22,17 @@ src/YourModule/
 └── routing.php          # Module routes (optional)
 ```
 
-## Creating a Module
+## Создание модуля
 
-### Step 1: Create Directory Structure
+### Шаг 1: Создание структуры каталогов
 
 ```bash
 mkdir -p src/YourModule/{Entity,Repository,Service,ApiPlatform}
 ```
 
-### Step 2: Create DI Configuration
+### Шаг 2: Создание конфигурации DI
 
-Create `src/YourModule/di.yaml`:
+Создайте `src/YourModule/di.yaml`:
 
 ```yaml
 services:
@@ -46,14 +46,14 @@ services:
             - '../Entity/'
 ```
 
-This configuration:
-- Enables autowiring for all services in the module
-- Auto-configures services with tags
-- Excludes entities from service registration
+Эта конфигурация:
+- Включает autowiring для всех сервисов модуля
+- Автоматически настраивает сервисы с помощью тегов
+- Исключает сущности из регистрации сервисов
 
-### Step 3: Create Entity
+### Шаг 3: Создание сущности
 
-Create `src/YourModule/Entity/YourEntity.php`:
+Создайте `src/YourModule/Entity/YourEntity.php`:
 
 ```php
 <?php
@@ -112,9 +112,9 @@ class YourEntity
 }
 ```
 
-### Step 4: Create Repository
+### Шаг 4: Создание Repository
 
-Create `src/YourModule/Repository/YourEntityRepository.php`:
+Создайте `src/YourModule/Repository/YourEntityRepository.php`:
 
 ```php
 <?php
@@ -157,18 +157,18 @@ class YourEntityRepository extends ServiceEntityRepository
 }
 ```
 
-### Step 5: Create Migration
+### Шаг 5: Создание миграции
 
 ```bash
 docker compose exec php bin/console doctrine:migrations:diff
 docker compose exec php bin/console doctrine:migrations:migrate
 ```
 
-## Advanced Module Features
+## Продвинутые возможности модулей
 
-### Custom State Processors
+### Кастомные State Processor
 
-For complex create/update logic, create a state processor in `src/YourModule/ApiPlatform/`:
+Для сложной логики создания/обновления создайте state processor в `src/YourModule/ApiPlatform/`:
 
 ```php
 <?php
@@ -199,7 +199,7 @@ final readonly class YourEntityProcessor implements ProcessorInterface
 }
 ```
 
-Register it in your entity:
+Зарегистрируйте его в своей сущности:
 
 ```php
 #[ApiResource(
@@ -210,9 +210,9 @@ Register it in your entity:
 )]
 ```
 
-### Custom State Providers
+### Кастомные State Provider
 
-For custom data retrieval logic:
+Для кастомной логики получения данных:
 
 ```php
 <?php
@@ -236,9 +236,9 @@ final readonly class YourEntityProvider implements ProviderInterface
 }
 ```
 
-### Doctrine Extensions
+### Расширения Doctrine
 
-For filtering collections:
+Для фильтрации коллекций:
 
 ```php
 <?php
@@ -266,9 +266,9 @@ final class YourEntityExtension implements QueryCollectionExtensionInterface
 }
 ```
 
-### Business Logic Services
+### Сервисы бизнес-логики
 
-Create services in `src/YourModule/Service/`:
+Создавайте сервисы в `src/YourModule/Service/`:
 
 ```php
 <?php
@@ -298,11 +298,11 @@ final readonly class YourService
 }
 ```
 
-## Module Configuration Files
+## Конфигурационные файлы модуля
 
 ### doctrine.yaml
 
-Create `src/YourModule/doctrine.yaml` for Doctrine-specific configuration:
+Создайте `src/YourModule/doctrine.yaml` для конфигурации, специфичной для Doctrine:
 
 ```yaml
 doctrine:
@@ -317,7 +317,7 @@ doctrine:
 
 ### api_platform.yaml
 
-Create `src/YourModule/api_platform.yaml` for API Platform defaults:
+Создайте `src/YourModule/api_platform.yaml` для значений по умолчанию API Platform:
 
 ```yaml
 api_platform:
@@ -328,7 +328,7 @@ api_platform:
 
 ### routing.php
 
-Create `src/YourModule/routing.php` for custom routes:
+Создайте `src/YourModule/routing.php` для кастомных маршрутов:
 
 ```php
 <?php
@@ -344,11 +344,11 @@ return static function (RoutingConfigurator $routes): void {
 };
 ```
 
-## Testing Modules
+## Тестирование модулей
 
-### Unit Tests
+### Модульные тесты
 
-Create tests in `tests/Unit/YourModule/`:
+Создавайте тесты в `tests/Unit/YourModule/`:
 
 ```php
 <?php
@@ -369,9 +369,9 @@ class YourServiceTest extends TestCase
 }
 ```
 
-### API Tests
+### API-тесты
 
-Create API tests in `tests/Api/YourModule/`:
+Создавайте API-тесты в `tests/Api/YourModule/`:
 
 ```php
 <?php
@@ -394,21 +394,21 @@ class YourEntityTest extends ApiTestCase
 }
 ```
 
-## Best Practices
+## Лучшие практики
 
-1. **Keep modules independent** - Avoid direct dependencies between modules
-2. **Use events for communication** - Use Symfony EventDispatcher or Messenger for inter-module communication
-3. **Thin repositories** - Keep complex queries in services, not repositories
-4. **Type everything** - Use strict types, type hints, and return types
-5. **No comments** - Code should be self-documenting; use PHPDoc only for type hints
-6. **Validate early** - Use Symfony validation constraints on entities
-7. **Use readonly** - Mark services as readonly when possible (PHP 8.2+)
+1. **Держите модули независимыми** — избегайте прямых зависимостей между модулями
+2. **Используйте события для коммуникации** — используйте Symfony EventDispatcher или Messenger для межмодульного взаимодействия
+3. **Тонкие репозитории** — держите сложные запросы в сервисах, а не в репозиториях
+4. **Типизируйте всё** — используйте strict types, type hints и типы возвращаемых значений
+5. **Без комментариев** — код должен быть самодокументируемым; используйте PHPDoc только для указания типов
+6. **Валидируйте рано** — используйте ограничения валидации Symfony на сущностях
+7. **Используйте readonly** — помечайте сервисы как readonly, где это возможно (PHP 8.2+)
 
-## Module Examples
+## Примеры модулей
 
-See the `src/Example/` module for a complete working example. Delete it in production projects.
+См. модуль `src/Example/` для полноценного рабочего примера. Удалите его в продакшн-проектах.
 
-## Common Patterns
+## Типовые паттерны
 
 ### Read-only API
 
@@ -421,7 +421,7 @@ See the `src/Example/` module for a complete working example. Delete it in produ
 )]
 ```
 
-### Custom Operations
+### Кастомные операции
 
 ```php
 #[ApiResource(
@@ -437,7 +437,7 @@ See the `src/Example/` module for a complete working example. Delete it in produ
 )]
 ```
 
-### Pagination
+### Пагинация
 
 ```php
 #[ApiResource(
@@ -447,34 +447,33 @@ See the `src/Example/` module for a complete working example. Delete it in produ
 )]
 ```
 
-## Troubleshooting
+## Устранение неполадок
 
-### Services not found
+### Сервисы не найдены
 
-Ensure `di.yaml` exists and follows the correct format. Clear cache:
+Убедитесь, что `di.yaml` существует и следует правильному формату. Очистите кэш:
 
 ```bash
 docker compose exec php bin/console cache:clear
 ```
 
-### API routes not appearing
+### API-маршруты не появляются
 
-Check that:
-1. Entity has `#[ApiResource]` attribute
-2. Module is in `src/` directory
-3. Namespace matches directory structure
+Проверьте, что:
+1. У сущности есть атрибут `#[ApiResource]`
+2. Модуль находится в каталоге `src/`
+3. Пространство имён соответствует структуре каталогов
 
-### Database schema errors
+### Ошибки схемы базы данных
 
-Regenerate migration:
+Перегенерируйте миграцию:
 
 ```bash
 docker compose exec php bin/console doctrine:migrations:diff
 ```
 
-## Resources
+## Ресурсы
 
 - [Symfony Dependency Injection](https://symfony.com/doc/current/service_container.html)
 - [API Platform Documentation](https://api-platform.com/docs)
 - [Doctrine ORM](https://www.doctrine-project.org/projects/orm.html)
-

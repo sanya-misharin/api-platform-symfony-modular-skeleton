@@ -1,16 +1,16 @@
 [English](GETTING_STARTED.md) · [Русский](GETTING_STARTED.ru.md)
 
-# Getting Started
+# Начало работы
 
-This guide will help you create your first module and API endpoint.
+Это руководство поможет вам создать ваш первый модуль и API-эндпоинт.
 
-## Prerequisites
+## Требования
 
-- Docker and Docker Compose installed
-- Basic understanding of Symfony and API Platform
-- PHP 8.4 knowledge
+- Установленные Docker и Docker Compose
+- Базовое понимание Symfony и API Platform
+- Знание PHP 8.4
 
-## Step 1: Start the Application
+## Шаг 1: Запуск приложения
 
 ```bash
 # Clone the repository
@@ -24,21 +24,21 @@ docker compose up -d --build
 curl http://localhost/docs
 ```
 
-You should see the API Platform documentation page.
+Вы должны увидеть страницу документации API Platform.
 
-## Step 2: Create Your First Module
+## Шаг 2: Создание вашего первого модуля
 
-Let's create a `Product` module as an example.
+Создадим для примера модуль `Product`.
 
-### 2.1 Create Directory Structure
+### 2.1 Создание структуры каталогов
 
 ```bash
 mkdir -p src/Product/{Entity,Repository,Service}
 ```
 
-### 2.2 Create the Entity
+### 2.2 Создание сущности
 
-Create `src/Product/Entity/Product.php`:
+Создайте `src/Product/Entity/Product.php`:
 
 ```php
 <?php
@@ -142,9 +142,9 @@ class Product
 }
 ```
 
-### 2.3 Create the Repository
+### 2.3 Создание репозитория
 
-Create `src/Product/Repository/ProductRepository.php`:
+Создайте `src/Product/Repository/ProductRepository.php`:
 
 ```php
 <?php
@@ -169,9 +169,9 @@ class ProductRepository extends ServiceEntityRepository
 }
 ```
 
-### 2.4 Create DI Configuration
+### 2.4 Создание DI-конфигурации
 
-Create `src/Product/di.yaml`:
+Создайте `src/Product/di.yaml`:
 
 ```yaml
 services:
@@ -185,7 +185,7 @@ services:
             - '../Entity/'
 ```
 
-## Step 3: Generate and Run Migration
+## Шаг 3: Генерация и запуск миграции
 
 ```bash
 # Generate migration
@@ -197,14 +197,14 @@ docker compose exec php bin/console doctrine:migrations:diff
 docker compose exec php bin/console doctrine:migrations:migrate --no-interaction
 ```
 
-## Step 4: Test Your API
+## Шаг 4: Тестирование вашего API
 
-### List Products (should be empty)
+### Список товаров (должен быть пустым)
 ```bash
 curl http://localhost/products
 ```
 
-### Create a Product
+### Создание товара
 ```bash
 curl -X POST http://localhost/products \
   -H "Content-Type: application/json" \
@@ -215,12 +215,12 @@ curl -X POST http://localhost/products \
   }'
 ```
 
-### Get the Product
+### Получение товара
 ```bash
 curl http://localhost/products/1
 ```
 
-### Update the Product
+### Обновление товара
 ```bash
 curl -X PUT http://localhost/products/1 \
   -H "Content-Type: application/json" \
@@ -231,28 +231,28 @@ curl -X PUT http://localhost/products/1 \
   }'
 ```
 
-### Delete the Product
+### Удаление товара
 ```bash
 curl -X DELETE http://localhost/products/1
 ```
 
-## Step 5: View API Documentation
+## Шаг 5: Просмотр документации API
 
-Open in browser: http://localhost/docs
+Откройте в браузере: http://localhost/docs
 
-You'll see interactive Swagger documentation for your Product API.
+Вы увидите интерактивную Swagger-документацию для вашего Product API.
 
-## Next Steps
+## Дальнейшие шаги
 
-1. **Add Business Logic**: Create services in `src/Product/Service/`
-2. **Add Validation**: Use Symfony validation constraints
-3. **Add Tests**: Create unit tests in `tests/Unit/Product/`
-4. **Customize API**: Use API Platform state processors for complex operations
-5. **Add Relationships**: Link Product to other entities (e.g., Category)
+1. **Добавьте бизнес-логику**: создавайте сервисы в `src/Product/Service/`
+2. **Добавьте валидацию**: используйте ограничения валидации Symfony
+3. **Добавьте тесты**: создавайте юнит-тесты в `tests/Unit/Product/`
+4. **Настройте API**: используйте state processors API Platform для сложных операций
+5. **Добавьте связи**: свяжите Product с другими сущностями (например, Category)
 
-## Common Issues
+## Частые проблемы
 
-### Migration Failed
+### Миграция не выполнилась
 ```bash
 # Check database connection
 docker compose exec php bin/console dbal:run-sql "SELECT 1"
@@ -261,7 +261,7 @@ docker compose exec php bin/console dbal:run-sql "SELECT 1"
 docker compose exec php bin/console doctrine:migrations:status
 ```
 
-### API Returns 500 Error
+### API возвращает ошибку 500
 ```bash
 # Check logs
 docker compose logs php
@@ -270,12 +270,12 @@ docker compose logs php
 docker compose exec php bin/console cache:clear
 ```
 
-### Entity Not Found in API
-- Verify `#[ApiResource]` attribute is present
-- Clear cache: `docker compose exec php bin/console cache:clear`
-- Check that DI configuration is correct
+### Сущность не найдена в API
+- Убедитесь, что присутствует атрибут `#[ApiResource]`
+- Очистите кэш: `docker compose exec php bin/console cache:clear`
+- Проверьте, что DI-конфигурация корректна
 
-## Useful Commands
+## Полезные команды
 
 ```bash
 # List all routes
@@ -288,8 +288,8 @@ docker compose exec php bin/console debug:container
 docker compose exec php bin/console doctrine:schema:validate
 ```
 
-## Resources
+## Ресурсы
 
-- [API Platform Documentation](https://api-platform.com/docs/)
-- [Doctrine ORM Documentation](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/)
-- [Symfony Documentation](https://symfony.com/doc/current/index.html)
+- [Документация API Platform](https://api-platform.com/docs/)
+- [Документация Doctrine ORM](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/)
+- [Документация Symfony](https://symfony.com/doc/current/index.html)

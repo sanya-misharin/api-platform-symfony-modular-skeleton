@@ -1,14 +1,14 @@
 [English](BEST_PRACTICES.md) · [Русский](BEST_PRACTICES.ru.md)
 
-# Best Practices
+# Лучшие практики
 
-This document outlines coding standards and best practices for this project.
+Этот документ описывает стандарты кодирования и лучшие практики проекта.
 
-## Code Style
+## Стиль кода
 
-### Strict Types
+### Строгие типы
 
-**Always** use strict type declarations in every PHP file:
+**Всегда** используйте объявление строгих типов в каждом PHP-файле:
 
 ```php
 <?php
@@ -18,48 +18,48 @@ declare(strict_types=1);
 namespace App\YourModule;
 ```
 
-### Type Hints
+### Подсказки типов
 
-Use type hints everywhere:
+Используйте подсказки типов везде:
 
 ```php
-// ✅ Good
+// ✅ Хорошо
 public function process(YourEntity $entity, int $id): YourEntity
 {
     return $entity;
 }
 
-// ❌ Bad
+// ❌ Плохо
 public function process($entity, $id)
 {
     return $entity;
 }
 ```
 
-### Return Types
+### Типы возвращаемых значений
 
-Always declare return types:
+Всегда объявляйте типы возвращаемых значений:
 
 ```php
-// ✅ Good
+// ✅ Хорошо
 public function getName(): string
 {
     return $this->name;
 }
 
-// ❌ Bad
+// ❌ Плохо
 public function getName()
 {
     return $this->name;
 }
 ```
 
-### Readonly Properties
+### Readonly-свойства
 
-Use readonly properties when values don't change after construction:
+Используйте readonly-свойства, когда значения не меняются после конструирования:
 
 ```php
-// ✅ Good
+// ✅ Хорошо
 final readonly class YourService
 {
     public function __construct(
@@ -68,7 +68,7 @@ final readonly class YourService
     }
 }
 
-// ❌ Bad (unless you need to modify dependencies)
+// ❌ Плохо (если только вам не нужно менять зависимости)
 final class YourService
 {
     private YourRepository $repository;
@@ -80,19 +80,19 @@ final class YourService
 }
 ```
 
-### Constructor Property Promotion
+### Продвижение свойств конструктора
 
-Use constructor property promotion (PHP 8.0+):
+Используйте продвижение свойств конструктора (PHP 8.0+):
 
 ```php
-// ✅ Good
+// ✅ Хорошо
 public function __construct(
     private string $name,
     private int $age,
 ) {
 }
 
-// ❌ Bad
+// ❌ Плохо
 private string $name;
 private int $age;
 
@@ -103,14 +103,14 @@ public function __construct(string $name, int $age)
 }
 ```
 
-## Documentation
+## Документация
 
-### No Comments
+### Без комментариев
 
-**DO NOT** add descriptive comments. Code should be self-documenting through clear naming:
+**НЕ** добавляйте описательные комментарии. Код должен быть самодокументируемым за счёт понятных имён:
 
 ```php
-// ❌ Bad
+// ❌ Плохо
 /**
  * This method processes the entity and saves it to database
  */
@@ -122,7 +122,7 @@ public function process(Entity $entity): void
     $this->repository->save($entity);
 }
 
-// ✅ Good
+// ✅ Хорошо
 public function process(Entity $entity): void
 {
     $entity->setStatus('processed');
@@ -130,12 +130,12 @@ public function process(Entity $entity): void
 }
 ```
 
-### PHPDoc for Types Only
+### PHPDoc только для типов
 
-Use PHPDoc **only** for type hints that PHP cannot express:
+Используйте PHPDoc **только** для подсказок типов, которые PHP не может выразить:
 
 ```php
-// ✅ Good - PHPStan needs this
+// ✅ Хорошо — это нужно PHPStan
 /**
  * @var array<string, mixed>
  */
@@ -149,7 +149,7 @@ public function findAll(): array
     return $this->repository->findAll();
 }
 
-// ✅ Good - Generics for repositories
+// ✅ Хорошо — дженерики для репозиториев
 /**
  * @extends ServiceEntityRepository<YourEntity>
  */
@@ -158,12 +158,12 @@ class YourEntityRepository extends ServiceEntityRepository
 }
 ```
 
-## Entity Conventions
+## Конвенции сущностей
 
-### Use Attributes
+### Используйте атрибуты
 
 ```php
-// ✅ Good
+// ✅ Хорошо
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ORM\Table(name: 'products')]
 #[ApiResource]
@@ -176,10 +176,10 @@ class Product
 }
 ```
 
-### Use Types Constants
+### Используйте константы Types
 
 ```php
-// ✅ Good
+// ✅ Хорошо
 use Doctrine\DBAL\Types\Types;
 
 #[ORM\Column(type: Types::STRING, length: 255)]
@@ -191,32 +191,32 @@ private string $description;
 #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
 private \DateTimeImmutable $createdAt;
 
-// ❌ Bad
+// ❌ Плохо
 #[ORM\Column(type: 'string', length: 255)]
 private string $name;
 ```
 
-### Identity Generation Strategy
+### Стратегия генерации идентификаторов
 
-For PostgreSQL, use IDENTITY:
+Для PostgreSQL используйте IDENTITY:
 
 ```php
-// ✅ Good for PostgreSQL
+// ✅ Хорошо для PostgreSQL
 #[ORM\Id]
 #[ORM\GeneratedValue(strategy: 'IDENTITY')]
 #[ORM\Column(type: Types::INTEGER)]
 private ?int $id = null;
 
-// ❌ Bad
+// ❌ Плохо
 #[ORM\Id]
 #[ORM\GeneratedValue(strategy: 'AUTO')]
 #[ORM\Column(type: 'integer')]
 private ?int $id = null;
 ```
 
-### Validation Constraints
+### Ограничения валидации
 
-Use Symfony validation constraints:
+Используйте ограничения валидации Symfony:
 
 ```php
 use Symfony\Component\Validator\Constraints as Assert;
@@ -231,28 +231,28 @@ private string $name;
 private string $email;
 ```
 
-### Immutable Dates
+### Неизменяемые даты
 
-Prefer `DateTimeImmutable` over `DateTime`:
+Предпочитайте `DateTimeImmutable` вместо `DateTime`:
 
 ```php
-// ✅ Good
+// ✅ Хорошо
 #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
 private \DateTimeImmutable $createdAt;
 
-// ❌ Bad
+// ❌ Плохо
 #[ORM\Column(type: Types::DATETIME_MUTABLE)]
 private \DateTime $createdAt;
 ```
 
 ## API Platform
 
-### Explicit Operations
+### Явные операции
 
-Be explicit about available operations:
+Явно указывайте доступные операции:
 
 ```php
-// ✅ Good
+// ✅ Хорошо
 #[ApiResource(
     operations: [
         new GetCollection(),
@@ -263,13 +263,13 @@ Be explicit about available operations:
     ]
 )]
 
-// ❌ Bad (implicit operations)
+// ❌ Плохо (неявные операции)
 #[ApiResource]
 ```
 
-### Custom Operations
+### Кастомные операции
 
-Use dedicated processors for complex operations:
+Используйте выделенные процессоры для сложных операций:
 
 ```php
 #[ApiResource(
@@ -282,10 +282,10 @@ Use dedicated processors for complex operations:
 )]
 ```
 
-### Use Short Attributes
+### Используйте короткие атрибуты
 
 ```php
-// ✅ Good
+// ✅ Хорошо
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 
@@ -296,7 +296,7 @@ use ApiPlatform\Metadata\Post;
     ]
 )]
 
-// ❌ Bad
+// ❌ Плохо
 #[ApiResource(
     operations: [
         new \ApiPlatform\Metadata\Get(),
@@ -305,14 +305,14 @@ use ApiPlatform\Metadata\Post;
 )]
 ```
 
-## Service Layer
+## Сервисный слой
 
-### Keep Repositories Thin
+### Держите репозитории тонкими
 
-Repositories should handle basic CRUD operations only:
+Репозитории должны обрабатывать только базовые CRUD-операции:
 
 ```php
-// ✅ Good
+// ✅ Хорошо
 class ProductRepository extends ServiceEntityRepository
 {
     public function save(Product $entity, bool $flush = false): void
@@ -325,7 +325,7 @@ class ProductRepository extends ServiceEntityRepository
     }
 }
 
-// ❌ Bad (complex business logic in repository)
+// ❌ Плохо (сложная бизнес-логика в репозитории)
 class ProductRepository extends ServiceEntityRepository
 {
     public function createProductWithNotification(array $data): Product
@@ -339,12 +339,12 @@ class ProductRepository extends ServiceEntityRepository
 }
 ```
 
-### Business Logic in Services
+### Бизнес-логика в сервисах
 
-Put complex logic in services:
+Помещайте сложную логику в сервисы:
 
 ```php
-// ✅ Good
+// ✅ Хорошо
 final readonly class ProductService
 {
     public function __construct(
@@ -368,40 +368,40 @@ final readonly class ProductService
 }
 ```
 
-### Final Classes
+### Final-классы
 
-Mark classes as final when they shouldn't be extended:
+Помечайте классы как final, когда их не следует расширять:
 
 ```php
-// ✅ Good for services
+// ✅ Хорошо для сервисов
 final readonly class YourService
 {
 }
 
-// ✅ Good for value objects
+// ✅ Хорошо для объектов-значений
 final readonly class Email
 {
 }
 
-// ⚠️ Don't use final for entities (Doctrine needs proxies)
+// ⚠️ Не используйте final для сущностей (Doctrine нужны прокси)
 class YourEntity
 {
 }
 ```
 
-## Dependency Injection
+## Внедрение зависимостей
 
-### Use Constructor Injection
+### Используйте внедрение через конструктор
 
 ```php
-// ✅ Good
+// ✅ Хорошо
 public function __construct(
     private YourRepository $repository,
     private LoggerInterface $logger,
 ) {
 }
 
-// ❌ Bad (setter injection)
+// ❌ Плохо (внедрение через сеттер)
 private YourRepository $repository;
 
 public function setRepository(YourRepository $repository): void
@@ -410,7 +410,7 @@ public function setRepository(YourRepository $repository): void
 }
 ```
 
-### Module DI Configuration
+### Конфигурация DI модуля
 
 ```yaml
 # src/YourModule/di.yaml
@@ -425,50 +425,50 @@ services:
             - '../Entity/'
 ```
 
-## Naming Conventions
+## Конвенции именования
 
-### Classes
+### Классы
 
-- **Entities**: Singular noun (e.g., `Product`, `User`, `Order`)
-- **Repositories**: Entity name + `Repository` (e.g., `ProductRepository`)
-- **Services**: Descriptive name + `Service` (e.g., `ProductService`, `EmailSender`)
-- **Processors**: Entity + `Processor` (e.g., `ProductProcessor`)
-- **Providers**: Entity + `Provider` (e.g., `ProductProvider`)
+- **Сущности**: существительное в единственном числе (например, `Product`, `User`, `Order`)
+- **Репозитории**: имя сущности + `Repository` (например, `ProductRepository`)
+- **Сервисы**: описательное имя + `Service` (например, `ProductService`, `EmailSender`)
+- **Процессоры**: сущность + `Processor` (например, `ProductProcessor`)
+- **Провайдеры**: сущность + `Provider` (например, `ProductProvider`)
 
-### Methods
+### Методы
 
-- **Getters**: `getPropertyName()` or `isPropertyName()` for booleans
-- **Setters**: `setPropertyName()`
-- **Actions**: Verb + noun (e.g., `createProduct()`, `sendEmail()`)
+- **Геттеры**: `getPropertyName()` или `isPropertyName()` для булевых значений
+- **Сеттеры**: `setPropertyName()`
+- **Действия**: глагол + существительное (например, `createProduct()`, `sendEmail()`)
 
-### Variables
+### Переменные
 
-- Use descriptive names:
+- Используйте описательные имена:
 
 ```php
-// ✅ Good
+// ✅ Хорошо
 $activeProducts = $this->repository->findActiveProducts();
 $totalAmount = $order->calculateTotal();
 
-// ❌ Bad
+// ❌ Плохо
 $prods = $this->repository->findActiveProducts();
 $total = $order->calculateTotal();
 ```
 
-## Error Handling
+## Обработка ошибок
 
-### Use Type System
+### Используйте систему типов
 
-Leverage PHP's type system instead of defensive checks:
+Полагайтесь на систему типов PHP вместо защитных проверок:
 
 ```php
-// ✅ Good
+// ✅ Хорошо
 public function process(Product $product): void
 {
     // Type system ensures $product is correct type
 }
 
-// ❌ Bad
+// ❌ Плохо
 public function process($product): void
 {
     if (!$product instanceof Product) {
@@ -477,61 +477,61 @@ public function process($product): void
 }
 ```
 
-### Use Specific Exceptions
+### Используйте специфичные исключения
 
 ```php
-// ✅ Good
+// ✅ Хорошо
 if (!$user->isActive()) {
     throw new UserNotActiveException();
 }
 
-// ❌ Bad
+// ❌ Плохо
 if (!$user->isActive()) {
     throw new \Exception('User not active');
 }
 ```
 
-## Testing
+## Тестирование
 
-### Test Naming
+### Именование тестов
 
 ```php
-// ✅ Good
+// ✅ Хорошо
 public function testCreateProductWithValidData(): void
 public function testThrowsExceptionWhenProductNotFound(): void
 
-// ❌ Bad
+// ❌ Плохо
 public function test1(): void
 public function testProduct(): void
 ```
 
-### Use Type Declarations in Tests
+### Используйте объявления типов в тестах
 
 ```php
-// ✅ Good
+// ✅ Хорошо
 public function testSomething(): void
 {
     self::assertSame('expected', $actual);
 }
 
-// ❌ Bad
+// ❌ Плохо
 public function testSomething()
 {
     $this->assertSame('expected', $actual);
 }
 ```
 
-## Database
+## База данных
 
-### Migrations
+### Миграции
 
-- Always review generated migrations before running them
-- Use descriptive migration names
-- Test migrations on a copy of production data
+- Всегда просматривайте сгенерированные миграции перед запуском
+- Используйте описательные имена миграций
+- Тестируйте миграции на копии продакшн-данных
 
-### Indexes
+### Индексы
 
-Add indexes for frequently queried columns:
+Добавляйте индексы для часто запрашиваемых колонок:
 
 ```php
 #[ORM\Entity]
@@ -542,9 +542,9 @@ class User
 }
 ```
 
-### Foreign Keys
+### Внешние ключи
 
-Use proper relations:
+Используйте корректные связи:
 
 ```php
 #[ORM\ManyToOne(targetEntity: Category::class)]
@@ -552,11 +552,11 @@ Use proper relations:
 private Category $category;
 ```
 
-## Security
+## Безопасность
 
-### Never Trust User Input
+### Никогда не доверяйте пользовательскому вводу
 
-Always validate and sanitize:
+Всегда валидируйте и очищайте:
 
 ```php
 #[Assert\NotBlank]
@@ -565,40 +565,40 @@ Always validate and sanitize:
 private string $username;
 ```
 
-### Use Parameterized Queries
+### Используйте параметризованные запросы
 
-Doctrine does this automatically, but if using raw SQL:
+Doctrine делает это автоматически, но если используете сырой SQL:
 
 ```php
-// ✅ Good
+// ✅ Хорошо
 $query = $entityManager->createQuery(
     'SELECT u FROM App\Entity\User u WHERE u.email = :email'
 );
 $query->setParameter('email', $email);
 
-// ❌ Bad
+// ❌ Плохо
 $query = $entityManager->createQuery(
     "SELECT u FROM App\Entity\User u WHERE u.email = '$email'"
 );
 ```
 
-## Performance
+## Производительность
 
-### Use Worker Mode in Production
+### Используйте worker-режим в продакшене
 
-FrankenPHP worker mode is enabled by default in production:
+Worker-режим FrankenPHP включён по умолчанию в продакшене:
 
 ```yaml
 # .env
 FRANKENPHP_CONFIG="import worker.Caddyfile"
 ```
 
-### Eager Loading
+### Жадная загрузка
 
-Avoid N+1 queries:
+Избегайте N+1 запросов:
 
 ```php
-// ✅ Good
+// ✅ Хорошо
 public function findAllWithCategory(): array
 {
     return $this->createQueryBuilder('p')
@@ -608,16 +608,16 @@ public function findAllWithCategory(): array
         ->getResult();
 }
 
-// ❌ Bad
+// ❌ Плохо
 public function findAll(): array
 {
     return $this->findAll(); // Will cause N+1 when accessing $product->getCategory()
 }
 ```
 
-### Pagination
+### Пагинация
 
-Always paginate large collections:
+Всегда пагинируйте большие коллекции:
 
 ```php
 #[ApiResource(
@@ -629,9 +629,9 @@ Always paginate large collections:
 
 ## Git
 
-### Commit Messages
+### Сообщения коммитов
 
-Follow conventional commits:
+Следуйте conventional commits:
 
 ```
 feat: add product creation endpoint
@@ -641,7 +641,7 @@ refactor: extract validation logic to service
 test: add tests for product processor
 ```
 
-### Branch Naming
+### Именование веток
 
 ```
 feature/user-authentication
@@ -651,13 +651,13 @@ refactor/extract-email-service
 
 ## PHPStan
 
-The project uses PHPStan level 6. Fix all issues:
+Проект использует PHPStan level 6. Исправляйте все замечания:
 
 ```bash
 docker compose exec php vendor/bin/phpstan analyse
 ```
 
-Common fixes:
+Типичные исправления:
 
 ```php
 // For dynamic arrays, add type hints
@@ -673,16 +673,15 @@ private array $data;
 class ProductRepository extends ServiceEntityRepository
 ```
 
-## Summary
+## Итог
 
-1. ✅ Use strict types everywhere
-2. ✅ Type hint all parameters and returns
-3. ✅ Use PHP 8.4 features (attributes, readonly, etc.)
-4. ✅ No descriptive comments - self-documenting code
-5. ✅ PHPDoc only for complex types
-6. ✅ Keep repositories thin
-7. ✅ Business logic in services
-8. ✅ Validate user input
-9. ✅ Test your code
-10. ✅ Follow PSR-12 coding standards
-
+1. ✅ Используйте строгие типы везде
+2. ✅ Указывайте подсказки типов для всех параметров и возвращаемых значений
+3. ✅ Используйте возможности PHP 8.4 (атрибуты, readonly и т. д.)
+4. ✅ Никаких описательных комментариев — самодокументируемый код
+5. ✅ PHPDoc только для сложных типов
+6. ✅ Держите репозитории тонкими
+7. ✅ Бизнес-логика в сервисах
+8. ✅ Валидируйте пользовательский ввод
+9. ✅ Тестируйте свой код
+10. ✅ Следуйте стандартам кодирования PSR-12

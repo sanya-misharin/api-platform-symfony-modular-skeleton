@@ -1,3 +1,5 @@
+[English](ARCHITECTURE.md) · [Русский](ARCHITECTURE.ru.md)
+
 # Modular Architecture
 
 This project implements a **modular architecture** where each feature/domain is isolated in its own module.
