@@ -67,7 +67,7 @@ docker compose exec -T php bin/console doctrine:migrations:diff
 - Открывайте PR в `main`; заголовок — в формате Conventional Commits.
 - Заполните [шаблон PR](.github/PULL_REQUEST_TEMPLATE.md) и свяжите issue через `Closes #<n>`.
 - Держите PR сфокусированным — одно логическое изменение.
-- Зелёные проверки: PHPStan, php-cs-fixer, тесты и workflow Conventions.
+- Зелёные проверки: workflow **Quality** (PHPStan, php-cs-fixer, PHPUnit против сервиса Postgres) и workflow **Conventions** (имя ветки + сообщения коммитов) — оба гоняются на каждом PR.
 
 ## Issue
 

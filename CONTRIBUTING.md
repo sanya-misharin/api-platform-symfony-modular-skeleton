@@ -67,7 +67,7 @@ docker compose exec -T php bin/console doctrine:migrations:diff
 - Open the PR against `main`; the title follows Conventional Commits.
 - Fill in the [PR template](.github/PULL_REQUEST_TEMPLATE.md) and link the issue with `Closes #<n>`.
 - Keep the PR focused — one logical change.
-- Green checks: PHPStan, php-cs-fixer, tests, and the Conventions workflow.
+- Green checks: the **Quality** workflow (PHPStan, php-cs-fixer, PHPUnit against a Postgres service) and the **Conventions** workflow (branch name + commit messages), both run on every PR.
 
 ## Issues
 
