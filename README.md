@@ -1,3 +1,5 @@
+[English](README.md) · [Русский](README.ru.md)
+
 # API Platform + Symfony Modular Skeleton
 
 🚀 Production-ready starter template for building modular REST API backends with **Symfony 7.3** and **API Platform 4.1
