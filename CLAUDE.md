@@ -162,12 +162,12 @@ docker compose exec -T php bin/console debug:router
 
 Мультиагентный цикл ведёт задачу от формулировки до проверенного результата:
 
-`orchestrator` → `spec` → `architect` → (`architecture-critic` на высокоставочном плане) → `coder` → параллельное ревью (`tester` + `mr-reviewer` + `quality-reviewer`, плюс `database`/`security` по флагу из плана) → (`redteam` на верхнем уровне риска) → `validator` (единственный выдаёт PASS/FAIL/BLOCKED) → `product-docs` (после PASS, не блокирует).
+`orchestrator` → `spec` → `architect` → (`architecture-critic` на высокоставочном плане) → `coder` → параллельное ревью (`tester` + `mr-reviewer` + `quality-reviewer`, плюс `database`/`security` по флагу из плана) → (`redteam` на верхнем уровне риска) → `validator` (единственный выдаёт PASS/FAIL/BLOCKED) → `docs` (после PASS, не блокирует).
 
 - `spec`/`architect` сохраняют артефакты в `docs/specs/<slug>/spec.md` и `plan.md`.
 - `architecture-critic` и `redteam` — **свежие adversarial-инстансы**, только на высокоставочной работе (ownership/авторизация, целостность данных, идемпотентность мутаций, изменения схемы). Не выдают PASS/FAIL.
 - `coder` — единственный, кто меняет прод-код; `tester` пишет PHPUnit-тесты.
 - `logs` расследует ошибки по стектрейсам/логам.
-- `product-docs` — опциональный финальный шаг после `Status: PASS` (путь к документу — env `PRODUCT_DOC_PATH` в `.claude/settings.local.json`; если не задан — тихо пропускается). Сдачу задачи не блокирует.
+- `docs` — финальный шаг после `Status: PASS`: сверяет изменения и актуализирует **собственную документацию репозитория** (`README.md` + `docs/`) по опенсорсной практике — правит по месту, а не ведёт changelog. Чисто технические изменения без документационной дельты пропускает. Сдачу задачи не блокирует.
 
 Модели/усилие каждого агента заданы в его frontmatter; общение с пользователем и отчёты — на русском, код — на английском.

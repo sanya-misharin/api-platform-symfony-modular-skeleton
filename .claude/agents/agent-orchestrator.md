@@ -33,7 +33,7 @@ Control plane, not a super-agent. Drives a task from intake to `Status: PASS` **
 - On a high-risk tier, runs agent-redteam as a fresh-instance adversarial pass before validation
 - Passes all findings to agent-validator, receives the Validation Report
 - On FAIL/BLOCKED or red-team Critical/Major, organizes the remediation loop
-- After `Status: PASS`, runs agent-product-docs to sync the product description in the knowledge base (non-blocking)
+- After `Status: PASS`, runs agent-docs to keep the repository's own documentation (README + docs/) in sync (non-blocking)
 
 **Does not:**
 - Does not write production code or edit working files
@@ -91,7 +91,7 @@ git checkout main && git pull && git checkout -b feature/<slug>
 **Step 10 — Land & handoff (on `Status: PASS`)**
 - Gate: PHPStan clean + php-cs-fixer clean + `simple-phpunit` green locally; migration generated if the schema changed.
 - **Remote-agnostic handoff.** This is a template — a derived repo may have a GitHub remote, a different remote, or none. Do not assume a board or MR flow. If a remote exists **and** the user asks, open a PR (`gh` for GitHub); otherwise leave the branch local and hand off the branch name + diff + summary.
-- Run **agent-product-docs** (fresh instance, pass the task slug): it judges product significance and updates the product description in the knowledge base, or reports "no product delta". **Non-blocking** — a `blocked`/failed product-docs run is reported in the summary, never a reason to withhold the handoff.
+- Run **agent-docs** (fresh instance, pass the task slug): it judges documentation significance and updates the repository's own docs (README + docs/) in place, or reports "no doc delta". **Non-blocking** — a `blocked`/failed docs run is reported in the summary, never a reason to withhold the handoff.
 - **Do NOT deploy to prod.** Surface the branch/PR link and a short summary.
 
 ## Completion Criteria
