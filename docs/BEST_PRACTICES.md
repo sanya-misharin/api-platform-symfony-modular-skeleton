@@ -681,6 +681,44 @@ private array $data;
 class ProductRepository extends ServiceEntityRepository
 ```
 
+## Rate limiting (optional)
+
+Rate limiting is not shipped by default — the right policy (which routes, per-user vs per-IP) is project-specific. Add it when you need it:
+
+```bash
+docker compose exec -T php composer require symfony/rate-limiter
+```
+
+Define a limiter in `config/packages/rate_limiter.php`:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
+return static function (ContainerConfigurator $container): void {
+    $container->extension('framework', [
+        'rate_limiter' => [
+            'api' => ['policy' => 'sliding_window', 'limit' => 60, 'interval' => '1 minute'],
+        ],
+    ]);
+};
+```
+
+Enforce it in a State Processor or controller — Symfony autowires the factory by name (`RateLimiterFactory $apiLimiter`):
+
+```php
+$limit = $this->apiLimiter->create($request->getClientIp())->consume();
+
+if (!$limit->isAccepted()) {
+    throw new TooManyRequestsHttpException($limit->getRetryAfter()->getTimestamp() - time());
+}
+```
+
+In production, install `symfony/lock` so the counters are shared across FrankenPHP worker processes.
+
 ## Summary
 
 1. ✅ Use strict types everywhere

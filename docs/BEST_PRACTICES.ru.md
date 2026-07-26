@@ -681,6 +681,44 @@ private array $data;
 class ProductRepository extends ServiceEntityRepository
 ```
 
+## Rate limiting (опционально)
+
+Ограничение частоты запросов не поставляется по умолчанию — правильная политика (какие маршруты, per-user или per-IP) зависит от проекта. Добавляйте, когда нужно:
+
+```bash
+docker compose exec -T php composer require symfony/rate-limiter
+```
+
+Опишите лимитер в `config/packages/rate_limiter.php`:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
+return static function (ContainerConfigurator $container): void {
+    $container->extension('framework', [
+        'rate_limiter' => [
+            'api' => ['policy' => 'sliding_window', 'limit' => 60, 'interval' => '1 minute'],
+        ],
+    ]);
+};
+```
+
+Применяйте в State Processor или контроллере — Symfony автовайрит фабрику по имени (`RateLimiterFactory $apiLimiter`):
+
+```php
+$limit = $this->apiLimiter->create($request->getClientIp())->consume();
+
+if (!$limit->isAccepted()) {
+    throw new TooManyRequestsHttpException($limit->getRetryAfter()->getTimestamp() - time());
+}
+```
+
+В проде поставьте `symfony/lock`, чтобы счётчики были общими между воркер-процессами FrankenPHP.
+
 ## Итог
 
 1. ✅ Используйте строгие типы везде
