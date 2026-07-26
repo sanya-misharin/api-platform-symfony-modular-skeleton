@@ -30,7 +30,7 @@ Empty (`Service/.gitkeep`). Domain logic goes here; processors stay thin orchest
 
 ## Module configuration
 
-- `di.php` — returns a `ContainerConfigurator` closure: `$services->defaults()->autowire()->autoconfigure()` + `$services->load('App\\Example\\', './')->exclude(['./Entity/'])`. Auto-loaded by `config/services.php`.
+- `di.php` — returns a `ContainerConfigurator` closure: `$services->defaults()->autowire()->autoconfigure()` + `$services->load('App\\Example\\', './')->exclude(['./Entity/', './*.php'])`. Auto-loaded by `config/services.php`.
 - `api_platform.php` — `ContainerConfigurator` closure registering the resource mapping path via `$container->extension('api_platform', ['mapping' => ['paths' => ['%kernel.project_dir%/src/Example/Entity']]])`.
 - `doctrine.php` — absent (the global mapping is enough); add it if a module needs an explicit ORM config.
 - Test overrides — `*_test.php` (not needed yet).

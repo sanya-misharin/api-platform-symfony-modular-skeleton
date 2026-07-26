@@ -113,7 +113,7 @@
            ->autoconfigure();
 
        $services->load('App\\YourModule\\', './')
-           ->exclude(['./Entity/']);
+           ->exclude(['./Entity/', './*.php']);
    };
    ```
 

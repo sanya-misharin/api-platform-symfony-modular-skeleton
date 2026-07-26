@@ -84,7 +84,7 @@ return static function (ContainerConfigurator $container): void {
         ->autoconfigure();
 
     $services->load('App\\Example\\', './')
-        ->exclude(['./Entity/']);
+        ->exclude(['./Entity/', './*.php']);
 };
 ```
 

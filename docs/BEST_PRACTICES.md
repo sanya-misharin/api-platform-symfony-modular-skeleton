@@ -429,7 +429,7 @@ return static function (ContainerConfigurator $container): void {
         ->autoconfigure();
 
     $services->load('App\\YourModule\\', './')
-        ->exclude(['./Entity/']);
+        ->exclude(['./Entity/', './*.php']);
 };
 ```
 
