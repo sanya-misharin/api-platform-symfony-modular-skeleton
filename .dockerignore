@@ -1,0 +1,45 @@
+# VCS
+.git
+.gitattributes
+.gitignore
+
+# Dependencies & build artifacts — reinstalled/regenerated inside the image.
+# Excluding /vendor also stops a local vendor from clobbering the image's
+# freshly-installed one during `COPY . ./` in the prod stage.
+/vendor
+/var
+/public/bundles
+/config/reference.php
+
+# Local env / secrets (kept: .env, needed by `composer dump-env prod`)
+.env.local
+.env.*.local
+
+# Dev-only tooling & CI (not needed at runtime)
+.github
+.githooks
+.claude
+.editorconfig
+.php-cs-fixer.dist.php
+.php-cs-fixer.cache
+phpstan.dist.neon
+phpstan-bootstrap.php
+rector.php
+phpunit.xml.dist
+.phpunit.result.cache
+Makefile
+
+# Tests & docs
+/tests
+/docs
+*.md
+
+# IDE
+.idea
+.vscode
+
+# Docker orchestration (base stage copies the specific docker/ files it needs)
+compose.yaml
+compose.*.yaml
+Dockerfile
+.dockerignore

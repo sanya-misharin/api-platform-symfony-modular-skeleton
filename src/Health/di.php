@@ -11,5 +11,8 @@ return static function (ContainerConfigurator $container): void {
         ->autowire()
         ->autoconfigure();
 
-    $services->load('App\\Health\\', './');
+    // Exclude the root-level config files (di.php, routing.php) — not classes;
+    // real services live in subdirectories (Controller/, …).
+    $services->load('App\\Health\\', './')
+        ->exclude(['./*.php']);
 };
