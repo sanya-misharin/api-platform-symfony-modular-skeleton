@@ -19,7 +19,7 @@ New services are bootstrapped from this skeleton. The agent system exists to dri
 - **Doctrine ORM 3.6** + PostgreSQL 16
 - **Web server:** FrankenPHP (Caddy, worker mode in prod) + **Mercure** (real-time)
 - **Auth:** Symfony Security component (pre-installed but not wired to a concrete provider — authentication is chosen per project). Roles/ownership are expressed via API Platform operation-level `security` + `config/packages/security.php`.
-- **Tests:** **PHPUnit** via `vendor/bin/simple-phpunit` (`symfony/phpunit-bridge`) · **Static:** PHPStan level 6 · **Lint:** php-cs-fixer ^3 (`@Symfony`) + Rector ^2
+- **Tests:** **PHPUnit** via `vendor/bin/simple-phpunit` (`symfony/phpunit-bridge`) · **Static:** PHPStan level 8 · **Lint:** php-cs-fixer ^3 (`@Symfony`) + Rector ^2
 - **Runtime:** dependencies and migrations are applied automatically by the entrypoint script on container start.
 
 ### What the skeleton does NOT have (important — do not assume it exists)
@@ -126,7 +126,7 @@ docker compose exec -T php vendor/bin/simple-phpunit
 docker compose exec -T php vendor/bin/simple-phpunit tests/Integration/Example/ExampleTest.php
 docker compose exec -T php vendor/bin/simple-phpunit --filter testName
 
-# Static analysis (level 6; analyses tests/ too — on a fresh checkout run
+# Static analysis (level 8; analyses tests/ too — on a fresh checkout run
 # `vendor/bin/simple-phpunit install` once first so PHPUnit classes are present)
 docker compose exec -T php vendor/bin/phpstan analyse
 

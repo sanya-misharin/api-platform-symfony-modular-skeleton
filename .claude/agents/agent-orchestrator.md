@@ -117,7 +117,7 @@ git checkout main && git pull && git checkout -b feat/<slug>
 - **Status changes:** plain named methods on the entity (`publish()`, `approve()`), no state machine
 - **Auth:** generic Symfony Security — operation-level `security` expressions + `config/packages/security.php` access_control; ownership `object.getOwner() == user` (may return 403 or 404); roles ROLE_USER / ROLE_ADMIN
 - **Tests:** `docker compose exec -T php vendor/bin/simple-phpunit`
-- **Static:** `docker compose exec -T php vendor/bin/phpstan analyse` (level 6), **Lint:** `docker compose exec -T php vendor/bin/php-cs-fixer fix --dry-run --diff`
+- **Static:** `docker compose exec -T php vendor/bin/phpstan analyse` (level 8), **Lint:** `docker compose exec -T php vendor/bin/php-cs-fixer fix --dry-run --diff`
 - **Specs/plans:** `docs/specs/<slug>/spec.md` and `plan.md`
 - Navigation: `CODEMAP.md`, `src/<Module>/CLAUDE.md`, `docs/ARCHITECTURE.md`
 

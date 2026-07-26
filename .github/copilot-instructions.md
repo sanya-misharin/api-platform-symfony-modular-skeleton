@@ -65,7 +65,7 @@
 - **Coverage**: `vendor/bin/simple-phpunit --coverage-html var/coverage`
 
 ### Static Analysis
-- **PHPStan**: `vendor/bin/phpstan analyse` (level 6)
+- **PHPStan**: `vendor/bin/phpstan analyse` (level 8)
 - **Rector**: `vendor/bin/rector` (for refactoring)
 
 ### Database
@@ -163,6 +163,6 @@ This is a **skeleton/template project**:
 2. **Self-Documenting Code**: Avoid comments, use clear names
 3. **Strict Types Always**: `declare(strict_types=1)` in every PHP file
 4. **Type Hints Everywhere**: Parameters, return types, properties
-5. **PHPStan Level 6**: Code must pass static analysis
+5. **PHPStan Level 8**: Code must pass static analysis
 6. **API First**: Expose APIs via API Platform attributes
 7. **Docker Native**: Development and production use Docker

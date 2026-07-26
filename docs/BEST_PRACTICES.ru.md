@@ -659,7 +659,7 @@ refactor/extract-email-service
 
 ## PHPStan
 
-Проект использует PHPStan level 6. Исправляйте все замечания:
+Проект использует PHPStan level 8. Исправляйте все замечания:
 
 ```bash
 docker compose exec php vendor/bin/phpstan analyse
