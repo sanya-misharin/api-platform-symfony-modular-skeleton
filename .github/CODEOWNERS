@@ -1,0 +1,7 @@
+# Code owners — requested for review automatically on matching pull requests.
+# See https://docs.github.com/articles/about-code-owners
+#
+# This is a starter template: a project bootstrapped from this skeleton should
+# replace the owner below with its own maintainer(s) or team (e.g. @org/backend).
+
+* @sanya-misharin
