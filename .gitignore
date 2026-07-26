@@ -42,3 +42,7 @@ phpstan.neon
 ###> generated ###
 /config/reference.php
 ###< generated ###
+
+###> deptrac/deptrac ###
+/.deptrac.cache
+###< deptrac/deptrac ###

@@ -18,6 +18,10 @@ indent_size = 2
 [.github/**.{yml,yaml}]
 indent_size = 2
 
+# Deptrac config (tool convention: 2-space YAML)
+[deptrac.yaml]
+indent_size = 2
+
 # Makefiles require real tabs
 [Makefile]
 indent_style = tab

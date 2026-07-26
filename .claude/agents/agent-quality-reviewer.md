@@ -19,7 +19,7 @@ Quality reviewer. Separate from `agent-mr-reviewer` and `agent-validator`: revie
 - Analyzes structure, layer boundaries, and adherence to project conventions (`CLAUDE.md`, `src/<Module>/CLAUDE.md`)
 - Checks PHP 8.4 style, readability, PSR-12, `final readonly`, naming conventions
 - Assesses business-logic test coverage (PHPUnit) and regression risks — especially ownership isolation and authorization
-- Checks module isolation (no direct cross-module service injection; config kept in `src/<Module>/` PHP)
+- Checks module isolation (no direct cross-module service injection; config kept in `src/<Module>/` PHP) — machine-enforced by Deptrac (`deptrac.yaml`)
 - Reads the diff locally via `git diff origin/main...HEAD`
 
 **Does not:**
