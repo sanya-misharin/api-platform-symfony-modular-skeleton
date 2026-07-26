@@ -34,9 +34,6 @@ return static function (ContainerConfigurator $container): void {
                     'is_bundle' => false,
                 ],
             ],
-            'controller_resolver' => [
-                'auto_mapping' => false,
-            ],
         ],
     ]);
 
