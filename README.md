@@ -17,6 +17,7 @@
 - **🔒 Security** - Symfony Security component pre-installed (choose your auth per project)
 - **📊 Mercure** - Real-time updates support
 - **❤️ Health Check** - `GET /health` liveness endpoint for orchestrators (k8s/Compose)
+- **🌿 Parallel Worktrees** - Run several tasks at once, each with its own isolated stack (`compose.worktree.yaml`)
 - **📝 Self-Documenting Code** - Strict typing, no comment clutter
 
 ## 🚀 Quick Start
@@ -222,6 +223,19 @@ docker compose exec php vendor/bin/php-cs-fixer fix --dry-run
 # Composer validation
 docker compose exec php composer validate --strict
 ```
+
+### Parallel Tasks (git worktree)
+
+Run two branches side by side on one machine — a worktree per task, a stack per worktree. `compose.worktree.yaml` parametrizes the only hardcoded port (the database one), and the compose project name comes from the worktree directory, so the second stack is fully isolated:
+
+```bash
+git worktree add ../skeleton-status-endpoint -b feat/status-endpoint
+cd ../skeleton-status-endpoint
+
+HTTP_PORT=8080 HTTPS_PORT=8443 HTTP3_PORT=8443 DB_PORT=55432 make up-worktree
+```
+
+Every later command from that directory (`docker compose exec …`, `make test`) targets that stack without extra flags. Full recipe, including teardown: [CONTRIBUTING.md](CONTRIBUTING.md#parallel-tasks-git-worktree).
 
 ### Process Management
 

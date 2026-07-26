@@ -16,6 +16,37 @@ perf/feed-query           ci/cache-vendor       build/frankenphp-image
 
 Allowed types: `feat`, `fix`, `refactor`, `perf`, `docs`, `test`, `build`, `ci`, `chore`, `revert`.
 
+## Parallel tasks (git worktree)
+
+Working on two branches at once? Give each one a **git worktree** instead of switching branches in a single checkout — uncommitted work and the current branch stay separate, and both stacks can run side by side on one machine.
+
+```bash
+git worktree add ../skeleton-status-endpoint -b feat/status-endpoint
+cd ../skeleton-status-endpoint
+```
+
+The stack is not started for you. The database port is the only hardcoded one (`5432:5432` in `compose.override.yaml`), so `compose.worktree.yaml` re-exposes it as `DB_PORT`; the HTTP ports are already parametrized. Pick free ports (`docker compose ls`, `ss -tlnp` — nothing is allocated automatically) and start:
+
+```bash
+HTTP_PORT=8080 HTTPS_PORT=8443 HTTP3_PORT=8443 DB_PORT=55432 \
+  docker compose -f compose.yaml -f compose.override.yaml -f compose.worktree.yaml up -d --build
+
+# or, identically:
+HTTP_PORT=8080 HTTPS_PORT=8443 HTTP3_PORT=8443 DB_PORT=55432 make up-worktree
+```
+
+The compose project name defaults to the worktree's directory name, so containers and volumes are isolated from the main checkout's — every later command from that directory (`docker compose exec -T php …`, `make test`) needs no extra flags. Each worktree has its own database volume and its own `vendor/`, installed by the entrypoint on the first start (a couple of minutes; it is deliberately not shared, a symlink to the main checkout's `vendor/` would dangle inside the container).
+
+Tearing down — `vendor/` and the contents of `var/` are created by root inside the container, so clear them from there first (`var/` itself is an anonymous volume mount and cannot be removed from inside):
+
+```bash
+docker compose exec -T php sh -c 'rm -rf vendor var/*'
+docker compose down -v
+git worktree remove ../skeleton-status-endpoint
+```
+
+> Using the agent pipeline? `claude --worktree <slug>` creates the worktree under `.claude/worktrees/<slug>/` (gitignored) and runs the session there; the stack steps above are the same.
+
 ## Commits
 
 We use [Conventional Commits](https://www.conventionalcommits.org/):

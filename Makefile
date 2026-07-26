@@ -6,13 +6,16 @@ PHP_NX  = $(DC) exec php php -d xdebug.mode=off
 CONSOLE = $(PHP_NX) bin/console
 
 .DEFAULT_GOAL := help
-.PHONY: help up down build restart logs sh install test stan cs cs-fix rector cc migration migrate validate deptrac
+.PHONY: help up up-worktree down build restart logs sh install test stan cs cs-fix rector cc migration migrate validate deptrac
 
 help: ## List available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-13s\033[0m %s\n", $$1, $$2}'
 
 up: ## Build and start the stack (detached)
 	$(DC) up -d --build
+
+up-worktree: ## Start this worktree's stack on free ports: HTTP_PORT=8080 HTTPS_PORT=8443 HTTP3_PORT=8443 DB_PORT=55432 make up-worktree
+	$(DC) -f compose.yaml -f compose.override.yaml -f compose.worktree.yaml up -d --build
 
 down: ## Stop and remove the stack
 	$(DC) down

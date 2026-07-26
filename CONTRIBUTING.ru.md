@@ -16,6 +16,37 @@ perf/feed-query           ci/cache-vendor       build/frankenphp-image
 
 Допустимые типы: `feat`, `fix`, `refactor`, `perf`, `docs`, `test`, `build`, `ci`, `chore`, `revert`.
 
+## Параллельные задачи (git worktree)
+
+Работаете над двумя ветками одновременно? Заведите на каждую **git worktree**, а не переключайте ветки в одном checkout'е — незакоммиченные правки и текущая ветка не пересекаются, и оба стека поднимаются рядом на одной машине.
+
+```bash
+git worktree add ../skeleton-status-endpoint -b feat/status-endpoint
+cd ../skeleton-status-endpoint
+```
+
+Стек не поднимается автоматически. Единственный захардкоженный порт — порт БД (`5432:5432` в `compose.override.yaml`), поэтому `compose.worktree.yaml` выносит его в `DB_PORT`; HTTP-порты уже параметризованы. Выберите свободные порты (`docker compose ls`, `ss -tlnp` — автоматического выделения нет) и поднимайте:
+
+```bash
+HTTP_PORT=8080 HTTPS_PORT=8443 HTTP3_PORT=8443 DB_PORT=55432 \
+  docker compose -f compose.yaml -f compose.override.yaml -f compose.worktree.yaml up -d --build
+
+# то же самое:
+HTTP_PORT=8080 HTTPS_PORT=8443 HTTP3_PORT=8443 DB_PORT=55432 make up-worktree
+```
+
+Имя compose-проекта по умолчанию берётся из имени директории worktree, поэтому контейнеры и тома изолированы от основного checkout'а — все последующие команды из этой директории (`docker compose exec -T php …`, `make test`) не требуют дополнительных флагов. У каждого worktree свой том БД и свой `vendor/`, который entrypoint ставит при первом старте (пара минут; он намеренно не расшарен — симлинк на `vendor/` основного checkout'а внутри контейнера указывал бы в никуда).
+
+Уборка — `vendor/` и содержимое `var/` создаются root'ом внутри контейнера, поэтому сначала очистите их оттуда (сам `var/` — точка монтирования анонимного тома, изнутри его не удалить):
+
+```bash
+docker compose exec -T php sh -c 'rm -rf vendor var/*'
+docker compose down -v
+git worktree remove ../skeleton-status-endpoint
+```
+
+> Пользуетесь агентным пайплайном? `claude --worktree <slug>` создаёт worktree в `.claude/worktrees/<slug>/` (в gitignore) и работает в нём; шаги по стеку — те же.
+
 ## Коммиты
 
 Используем [Conventional Commits](https://www.conventionalcommits.org/):
