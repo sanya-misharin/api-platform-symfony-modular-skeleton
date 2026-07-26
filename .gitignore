@@ -46,3 +46,9 @@ phpstan.neon
 ###> deptrac/deptrac ###
 /.deptrac.cache
 ###< deptrac/deptrac ###
+
+###> claude code ###
+# Worktrees created by `claude --worktree` live inside the repo
+/.claude/worktrees/
+/.claude/settings.local.json
+###< claude code ###

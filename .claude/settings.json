@@ -23,7 +23,7 @@
     ]
   },
   "worktree": {
-    "symlinkDirectories": ["vendor"]
+    "baseRef": "head"
   },
   "hooks": {
     "Stop": [
