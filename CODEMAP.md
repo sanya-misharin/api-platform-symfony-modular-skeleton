@@ -49,6 +49,10 @@ For simple CRUD with no domain logic, `#[ApiResource]` on the entity + Doctrine 
 
 ## Feature → module
 
+### Health check (liveness)
+- **Code:** `src/Health/` — `HealthController` (`GET /health` → `200 {"status":"ok"}`), a plain unauthenticated controller outside `/api`. Module routing via `src/Health/routing.php`. Details — `src/Health/CLAUDE.md`.
+- **Purpose:** liveness probe for orchestrators (k8s/Compose/LB). A keeper module (unlike `Example`).
+
 ### Example (demonstration, deleted in prod)
 - **Code:** `src/Example/` — the `Example` entity (`examples` table, `int` PK, API Platform CRUD operations: `GetCollection/Get/Post/Put/Delete`), `ExampleRepository` (save/remove). No logic beyond default CRUD.
 - **Purpose:** shows a minimal module and config auto-loading. When bootstrapping a real project — delete it and replace with your own modules following `docs/MODULE_DEVELOPMENT.md` + `src/Example/CLAUDE.md`.

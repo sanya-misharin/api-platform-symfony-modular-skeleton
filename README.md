@@ -16,6 +16,7 @@
 - **🛠️ Dev Tools** - PHPStan level 6, PHPUnit, Xdebug, Web Profiler
 - **🔒 Security** - Symfony Security component pre-installed (choose your auth per project)
 - **📊 Mercure** - Real-time updates support
+- **❤️ Health Check** - `GET /health` liveness endpoint for orchestrators (k8s/Compose)
 - **📝 Self-Documenting Code** - Strict typing, no comment clutter
 
 ## 🚀 Quick Start
