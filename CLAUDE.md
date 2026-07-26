@@ -153,6 +153,7 @@ docker compose exec -T php bin/console debug:router
 - Branch from `main` as `<type>/<slug>` (kebab-case slug). Types: `feat`, `fix`, `refactor`, `perf`, `docs`, `test`, `build`, `ci`, `chore`, `revert`.
 - Commit messages follow **Conventional Commits**: `<type>(<scope>): <subject>` (e.g. `feat(example): add status endpoint`). Full rules — `CONTRIBUTING.md`.
 - Commit/push only when the user asks.
+- **Never add Claude as a co-author.** No `Co-Authored-By: Claude …` trailer, no "Generated with Claude Code" line, no session link — in commit messages, PR titles/bodies, or anywhere else. `.claude/settings.json` → `attribution` enforces this; do not reintroduce it by hand.
 - **Remote-agnostic.** This is a template: a derived repo may have a GitHub remote, a GitLab remote, or none. Do not hardcode a GitLab board/labels. If a remote exists and the user asks, open a PR (`gh` for GitHub); otherwise leave the branch local and hand off the diff + summary.
 - Before handoff: PHPStan clean, cs-fixer clean, tests green, migration generated (if the schema changed), documentation synced (both language copies).
 
