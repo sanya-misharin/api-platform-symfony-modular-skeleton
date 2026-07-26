@@ -1,0 +1,29 @@
+deptrac:
+  paths:
+    - ./src
+
+  # Each module is a layer; a module may not depend on another module's code.
+  # Inter-module communication goes through events (see CLAUDE.md). Intra-module
+  # dependencies (entity <-> repository, processor -> service, …) are same-layer
+  # and always allowed.
+  #
+  # Adding a module? Add a `<Module>` layer below and a `<Module>: ~` ruleset entry.
+  #
+  # The documented exception — referencing another module's shared Entity — is a
+  # deliberate boundary crossing: when a module genuinely needs it, make it explicit
+  # here (e.g. split that module's Entity into its own layer and allow it), rather
+  # than opening the whole module. Prefer events for behaviour.
+  layers:
+    - name: Example
+      collectors:
+        - type: directory
+          value: 'src/Example/.*'
+
+    - name: Health
+      collectors:
+        - type: directory
+          value: 'src/Health/.*'
+
+  ruleset:
+    Example: ~
+    Health: ~

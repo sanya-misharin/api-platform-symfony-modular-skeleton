@@ -36,6 +36,7 @@
     },
     "require-dev": {
         "api-platform/schema-generator": "^5.2",
+        "deptrac/deptrac": "^4.7",
         "ergebnis/composer-normalize": "^2.52",
         "friendsofphp/php-cs-fixer": "^3.95",
         "phpstan/extension-installer": "^1.4",

@@ -6,7 +6,7 @@ PHP_NX  = $(DC) exec php php -d xdebug.mode=off
 CONSOLE = $(PHP_NX) bin/console
 
 .DEFAULT_GOAL := help
-.PHONY: help up down build restart logs sh install test stan cs cs-fix rector cc migration migrate validate
+.PHONY: help up down build restart logs sh install test stan cs cs-fix rector cc migration migrate validate deptrac
 
 help: ## List available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-13s\033[0m %s\n", $$1, $$2}'
@@ -58,3 +58,5 @@ migrate: ## Apply migrations
 validate: ## Validate composer.json and the Doctrine schema
 	$(PHP) composer validate --strict
 	$(CONSOLE) doctrine:schema:validate
+deptrac: ## Check module boundaries (Deptrac)
+	$(PHP) vendor/bin/deptrac analyse

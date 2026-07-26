@@ -48,6 +48,9 @@ jobs:
       - name: PHP CS Fixer
         run: vendor/bin/php-cs-fixer fix --dry-run --diff
 
+      - name: Deptrac (module boundaries)
+        run: vendor/bin/deptrac analyse --no-progress
+
   tests:
     name: PHPUnit
     runs-on: ubuntu-latest

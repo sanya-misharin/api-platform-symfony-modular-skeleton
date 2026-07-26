@@ -83,7 +83,7 @@ Every substantive module must have its own **`src/<Module>/CLAUDE.md`** with the
 
 ### Inter-module communication
 
-Modules communicate via **events** (EventDispatcher + `#[AsEventListener]`), not via direct cross-module service dependencies. The allowed exception is referencing another module's shared entity (e.g. an `author`).
+Modules communicate via **events** (EventDispatcher + `#[AsEventListener]`), not via direct cross-module service dependencies. The allowed exception is referencing another module's shared entity (e.g. an `author`). This boundary is **machine-enforced by Deptrac** (`deptrac.yaml`): each module is a layer that may not depend on another module's code — `vendor/bin/deptrac analyse`, run in CI. A new module needs a layer + `<Module>: ~` ruleset entry.
 
 ### Entities
 
@@ -133,6 +133,7 @@ docker compose exec -T php vendor/bin/phpstan analyse
 # Lint (agents run dry-run; fix only on request)
 docker compose exec -T php vendor/bin/php-cs-fixer fix --dry-run --diff
 docker compose exec -T php vendor/bin/rector process --dry-run
+docker compose exec -T php vendor/bin/deptrac analyse   # module boundaries
 
 # Changed files only (agent loop)
 FILES=$(git diff --name-only HEAD -- '*.php' | tr '\n' ' ')
