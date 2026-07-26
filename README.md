@@ -13,7 +13,7 @@
 - **🗄️ PostgreSQL 16** - Production-grade database
 - **🐳 Docker Ready** - Complete Docker setup with FrankenPHP
 - **⚡ FrankenPHP** - Modern PHP server with worker mode for production
-- **🛠️ Dev Tools** - PHPStan level 6, PHPUnit, Xdebug, Web Profiler
+- **🛠️ Dev Tools** - PHPStan level 8, PHPUnit, Xdebug, Web Profiler
 - **🔒 Security** - Symfony Security component pre-installed (choose your auth per project)
 - **📊 Mercure** - Real-time updates support
 - **❤️ Health Check** - `GET /health` liveness endpoint for orchestrators (k8s/Compose)
@@ -281,7 +281,7 @@ docker compose logs -f php
 - **FrankenPHP** - Modern PHP application server
 - **Caddy** - Web server with automatic HTTPS
 - **Mercure** - Real-time updates
-- **PHPStan** - Static analysis (level 6)
+- **PHPStan** - Static analysis (level 8)
 - **PHPUnit** - Testing framework
 
 ## 🤝 Contributing

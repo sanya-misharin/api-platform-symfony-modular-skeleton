@@ -43,6 +43,8 @@ abstract class ApiTestCase extends BaseApiTestCase
         self::bootKernel();
 
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
+        \assert($entityManager instanceof EntityManagerInterface);
+
         $metadata = $entityManager->getMetadataFactory()->getAllMetadata();
 
         $schemaTool = new SchemaTool($entityManager);

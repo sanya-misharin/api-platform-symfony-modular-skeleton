@@ -20,6 +20,8 @@ final class ExampleFactoryTest extends ApiTestCase
         ExampleFactory::createMany(3);
 
         $repository = self::getContainer()->get(ExampleRepository::class);
+        \assert($repository instanceof ExampleRepository);
+
         self::assertCount(3, $repository->findAll());
     }
 

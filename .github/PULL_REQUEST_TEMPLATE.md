@@ -34,7 +34,7 @@ Closes #
 ## Checklist
 
 - [ ] Branch follows `<type>/<slug>` and commits follow Conventional Commits
-- [ ] `docker compose exec -T php vendor/bin/phpstan analyse` is clean (level 6)
+- [ ] `docker compose exec -T php vendor/bin/phpstan analyse` is clean (level 8)
 - [ ] `docker compose exec -T php vendor/bin/php-cs-fixer fix --dry-run --diff` is clean (`@Symfony`)
 - [ ] `docker compose exec -T php vendor/bin/simple-phpunit` is green
 - [ ] Doctrine migration generated if the schema changed (not applied — the entrypoint runs `migrate`)

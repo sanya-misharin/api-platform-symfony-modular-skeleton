@@ -659,7 +659,7 @@ refactor/extract-email-service
 
 ## PHPStan
 
-The project uses PHPStan level 6. Fix all issues:
+The project uses PHPStan level 8. Fix all issues:
 
 ```bash
 docker compose exec php vendor/bin/phpstan analyse

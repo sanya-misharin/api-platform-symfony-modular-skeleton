@@ -51,7 +51,7 @@ Verifies acceptance criteria are met and all required stages are present. Closes
 
 ### Verification commands
 ```bash
-# Static analysis (level 6)
+# Static analysis (level 8)
 docker compose exec -T php vendor/bin/phpstan analyse
 
 # Lint on branch changes
