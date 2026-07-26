@@ -20,6 +20,10 @@ use Symfony\Component\Console\Output\NullOutput;
  */
 abstract class ApiTestCase extends BaseApiTestCase
 {
+    // Opt into the current behavior (boot the kernel on createClient) explicitly;
+    // in API Platform 5.0 the default becomes false. Also silences the 4.x deprecation.
+    protected static ?bool $alwaysBootKernel = true;
+
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
