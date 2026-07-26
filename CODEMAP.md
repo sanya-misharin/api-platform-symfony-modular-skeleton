@@ -10,6 +10,7 @@ A "feature → where to look" map — the first entry point before a task. Per-m
 - **API routing:** `config/routes/api_platform.php` (all API Platform resources); other routing — `config/routes/`, `config/routes.php`.
 - **Module DI/auto-loading:** `config/services.php` — imports, from **each** `src/**/`, the files `di`, `doctrine`, `api_platform` (`.php/.xml/.yaml/.yml`) plus env variants `{name}_{env}`. The skeleton uses PHP config.
 - **Bundles:** `config/bundles.php`. **Packages (global config):** `config/packages/*.php` (doctrine, api_platform, security, mercure, nelmio_cors, monolog, framework, …).
+- **Docker stack:** `compose.yaml` + `compose.override.yaml` (dev) / `compose.prod.yaml` (prod) / `compose.worktree.yaml` (a parallel stack for a git worktree — see `CLAUDE.md` § Parallel work via git worktree).
 
 ## Module layers (which does what)
 

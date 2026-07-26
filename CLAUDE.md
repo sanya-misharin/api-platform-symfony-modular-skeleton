@@ -156,6 +156,43 @@ docker compose exec -T php bin/console debug:router
 - **Remote-agnostic.** This is a template: a derived repo may have a GitHub remote, a GitLab remote, or none. Do not hardcode a GitLab board/labels. If a remote exists and the user asks, open a PR (`gh` for GitHub); otherwise leave the branch local and hand off the diff + summary.
 - Before handoff: PHPStan clean, cs-fixer clean, tests green, migration generated (if the schema changed), documentation synced (both language copies).
 
+## Parallel work via git worktree
+
+Two or more tasks at once — each in its own **git worktree**, never two sessions in the same checkout (they would fight over the current branch and each other's uncommitted edits). This is what makes several agent runs on one machine possible.
+
+`claude --worktree <slug>` (`-w`) creates `.claude/worktrees/<slug>/` on a fresh branch and works there. `.claude/settings.json` sets `worktree.baseRef: "head"` (branch from local HEAD) because the skeleton is remote-agnostic — the default `fresh` requires `origin/<default-branch>`; switch it back to `fresh` in a derived repo that always has a remote. `.claude/worktrees/` is gitignored.
+
+**The Docker stack is NOT started automatically for a worktree — it is an explicit, separate step** (an agent runs it only when told to):
+
+- The bind mount `./:/app` (`compose.override.yaml`) mounts the worktree's own files when `docker compose` runs from the worktree directory — that part needs nothing.
+- **Ports** are the problem. `HTTP_PORT`/`HTTPS_PORT`/`HTTP3_PORT` are already parametrized in `compose.yaml`, but the database port is hardcoded in `compose.override.yaml` (`5432:5432`) and collides with the main stack. `compose.worktree.yaml` parametrizes it as `DB_PORT` via `!override` — compose *concatenates* `ports:` lists across files, so a plain redefinition would add a second binding instead of replacing the first.
+- **`vendor/` is not symlinked into the worktree** (unlike the reference setup in our other repos): a host symlink pointing at the main checkout is a dangling link inside the container, where `/app` is the worktree. The entrypoint runs `composer install` when `vendor/` is empty, so each worktree builds its own — the first `up` takes a couple of minutes.
+
+Start the stack for a worktree:
+
+```bash
+# from inside .claude/worktrees/<slug>
+# pick free ports first (`docker compose ls`, `ss -tlnp`) — nothing is allocated automatically
+HTTP_PORT=8080 HTTPS_PORT=8443 HTTP3_PORT=8443 DB_PORT=55432 \
+  docker compose -f compose.yaml -f compose.override.yaml -f compose.worktree.yaml up -d --build
+# same thing via the Makefile: HTTP_PORT=8080 HTTPS_PORT=8443 HTTP3_PORT=8443 DB_PORT=55432 make up-worktree
+```
+
+The compose project name defaults to the worktree directory name, so the stack, its containers and its volumes are isolated from the main checkout's — and **every later command from that directory needs no extra flags**: `docker compose exec -T php vendor/bin/simple-phpunit` and everything under [Commands](#commands) works unchanged.
+
+The flip side: the target stack is chosen by the **current directory**, not by the branch. A `docker compose exec` issued from the main checkout hits the main stack — `cd` into the worktree in the same command (the shell's working directory is not guaranteed to carry over between tool calls).
+
+Each worktree gets its own `database_data` volume — the database is never shared between worktrees (a plus: a clean schema per suite instead of another task's leftovers); the entrypoint applies migrations to it on start.
+
+Teardown is manual (the `Stop` hook does not touch docker). `vendor/` and `var/` are created by root inside the container, so drop them from the container first:
+
+```bash
+# `var` itself is an anonymous volume mount — clear its contents, don't remove the directory
+docker compose exec -T php sh -c 'rm -rf vendor var/*'   # else `git worktree remove` hits permission denied
+docker compose down -v                                   # user-run: `docker compose down` is denied for agents
+git worktree remove .claude/worktrees/<slug>
+```
+
 ## Specification Driven Development
 
 Before implementing a new feature — spec first, then code.

@@ -16,6 +16,7 @@
 - **🔒 Безопасность** — компонент Symfony Security предустановлен (аутентификация — под проект)
 - **📊 Mercure** — поддержка обновлений в реальном времени
 - **❤️ Health Check** — liveness-эндпоинт `GET /health` для оркестраторов (k8s/Compose)
+- **🌿 Параллельные worktree** — несколько задач одновременно, у каждой свой изолированный стек (`compose.worktree.yaml`)
 - **📝 Самодокументируемый код** — строгая типизация, без лишних комментариев
 
 ## 🚀 Быстрый старт
@@ -221,6 +222,19 @@ docker compose exec php vendor/bin/php-cs-fixer fix --dry-run
 # Composer validation
 docker compose exec php composer validate --strict
 ```
+
+### Параллельные задачи (git worktree)
+
+Две ветки одновременно на одной машине — по worktree на задачу и по стеку на worktree. `compose.worktree.yaml` параметризует единственный захардкоженный порт (порт БД), а имя compose-проекта берётся из директории worktree, поэтому второй стек полностью изолирован:
+
+```bash
+git worktree add ../skeleton-status-endpoint -b feat/status-endpoint
+cd ../skeleton-status-endpoint
+
+HTTP_PORT=8080 HTTPS_PORT=8443 HTTP3_PORT=8443 DB_PORT=55432 make up-worktree
+```
+
+Все последующие команды из этой директории (`docker compose exec …`, `make test`) попадают в этот стек без дополнительных флагов. Полный рецепт, включая уборку: [CONTRIBUTING.ru.md](CONTRIBUTING.ru.md#параллельные-задачи-git-worktree).
 
 ### Управление процессами
 
