@@ -17,7 +17,7 @@ env:
 
 jobs:
   static:
-    name: PHPStan · CS-Fixer · composer
+    name: PHPStan · CS-Fixer · Rector · composer
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -47,6 +47,9 @@ jobs:
 
       - name: PHP CS Fixer
         run: vendor/bin/php-cs-fixer fix --dry-run --diff
+
+      - name: Rector
+        run: vendor/bin/rector process --dry-run --no-progress-bar
 
       - name: Deptrac (module boundaries)
         run: vendor/bin/deptrac analyse --no-progress

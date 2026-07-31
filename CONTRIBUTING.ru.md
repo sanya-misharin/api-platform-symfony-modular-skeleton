@@ -84,6 +84,7 @@ git config core.hooksPath .githooks
 ```bash
 docker compose exec -T php vendor/bin/phpstan analyse                 # статанализ, level 8
 docker compose exec -T php vendor/bin/php-cs-fixer fix --dry-run --diff   # стиль @Symfony
+docker compose exec -T php vendor/bin/rector process --dry-run        # идиомы PHP 8.4 / Symfony / Doctrine
 docker compose exec -T php vendor/bin/deptrac analyse                 # границы модулей
 docker compose exec -T php vendor/bin/simple-phpunit                  # тесты
 ```
@@ -99,7 +100,7 @@ docker compose exec -T php bin/console doctrine:migrations:diff
 - Открывайте PR в `main`; заголовок — в формате Conventional Commits.
 - Заполните [шаблон PR](.github/PULL_REQUEST_TEMPLATE.md) и свяжите issue через `Closes #<n>`.
 - Держите PR сфокусированным — одно логическое изменение.
-- Зелёные проверки: workflow **Quality** (PHPStan, php-cs-fixer, Deptrac, PHPUnit против сервиса Postgres) и workflow **Conventions** (имя ветки + сообщения коммитов) — оба гоняются на каждом PR.
+- Зелёные проверки: workflow **Quality** (PHPStan, php-cs-fixer, Rector, Deptrac, PHPUnit против сервиса Postgres) и workflow **Conventions** (имя ветки + сообщения коммитов) — оба гоняются на каждом PR.
 
 ## Issue
 
