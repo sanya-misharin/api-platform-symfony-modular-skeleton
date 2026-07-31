@@ -26,15 +26,11 @@ abstract class ApiTestCase extends BaseApiTestCase
 
     public static function setUpBeforeClass(): void
     {
-        parent::setUpBeforeClass();
-
         self::ensureTestDatabaseExists();
     }
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->resetSchema();
     }
 

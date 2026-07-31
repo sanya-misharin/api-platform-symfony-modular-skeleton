@@ -11,7 +11,7 @@ final class ExampleTest extends ApiTestCase
 {
     public function testGetCollectionIsEmptyInitially(): void
     {
-        static::createClient()->request('GET', '/api/examples');
+        self::createClient()->request('GET', '/api/examples');
 
         self::assertResponseIsSuccessful();
         self::assertJsonContains(['totalItems' => 0]);
@@ -19,7 +19,7 @@ final class ExampleTest extends ApiTestCase
 
     public function testCreateExample(): void
     {
-        static::createClient()->request('POST', '/api/examples', [
+        self::createClient()->request('POST', '/api/examples', [
             'json' => [
                 'name' => 'First example',
                 'description' => 'A demonstration resource',
@@ -35,7 +35,7 @@ final class ExampleTest extends ApiTestCase
 
     public function testCreateFailsWithBlankName(): void
     {
-        static::createClient()->request('POST', '/api/examples', [
+        self::createClient()->request('POST', '/api/examples', [
             'json' => ['name' => ''],
         ]);
 
@@ -44,7 +44,7 @@ final class ExampleTest extends ApiTestCase
 
     public function testCreateFailsWithTooShortName(): void
     {
-        static::createClient()->request('POST', '/api/examples', [
+        self::createClient()->request('POST', '/api/examples', [
             'json' => ['name' => 'ab'],
         ]);
 
@@ -53,7 +53,7 @@ final class ExampleTest extends ApiTestCase
 
     public function testGetItem(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
         $iri = $this->createExample($client, 'Readable example');
 
         $client->request('GET', $iri);
@@ -64,7 +64,7 @@ final class ExampleTest extends ApiTestCase
 
     public function testUpdateExample(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
         $iri = $this->createExample($client, 'Before update');
 
         $client->request('PUT', $iri, [
@@ -77,7 +77,7 @@ final class ExampleTest extends ApiTestCase
 
     public function testDeleteExample(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
         $iri = $this->createExample($client, 'Disposable example');
 
         $client->request('DELETE', $iri);

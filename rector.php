@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
 
-// Framework-aware rules (Symfony/Doctrine/PHPUnit) live in separate packages
-// (rector/rector-symfony, etc.); add them here once installed if desired.
 return RectorConfig::configure()
     ->withPaths([
         __DIR__.'/config',
@@ -21,4 +19,6 @@ return RectorConfig::configure()
         typeDeclarations: true,
         privatization: true,
         earlyReturn: true,
+        symfonyCodeQuality: true,
+        doctrineCodeQuality: true,
     );

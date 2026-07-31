@@ -52,3 +52,7 @@ phpstan.neon
 /.claude/worktrees/
 /.claude/settings.local.json
 ###< claude code ###
+
+###> serena mcp ###
+/.serena/
+###< serena mcp ###

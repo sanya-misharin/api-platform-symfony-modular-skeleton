@@ -84,6 +84,7 @@ Run inside the container:
 ```bash
 docker compose exec -T php vendor/bin/phpstan analyse                 # static analysis, level 8
 docker compose exec -T php vendor/bin/php-cs-fixer fix --dry-run --diff   # @Symfony code style
+docker compose exec -T php vendor/bin/rector process --dry-run        # PHP 8.4 / Symfony / Doctrine idioms
 docker compose exec -T php vendor/bin/deptrac analyse                 # module boundaries
 docker compose exec -T php vendor/bin/simple-phpunit                  # tests
 ```
@@ -99,7 +100,7 @@ docker compose exec -T php bin/console doctrine:migrations:diff
 - Open the PR against `main`; the title follows Conventional Commits.
 - Fill in the [PR template](.github/PULL_REQUEST_TEMPLATE.md) and link the issue with `Closes #<n>`.
 - Keep the PR focused — one logical change.
-- Green checks: the **Quality** workflow (PHPStan, php-cs-fixer, Deptrac, PHPUnit against a Postgres service) and the **Conventions** workflow (branch name + commit messages), both run on every PR.
+- Green checks: the **Quality** workflow (PHPStan, php-cs-fixer, Rector, Deptrac, PHPUnit against a Postgres service) and the **Conventions** workflow (branch name + commit messages), both run on every PR.
 
 ## Issues
 

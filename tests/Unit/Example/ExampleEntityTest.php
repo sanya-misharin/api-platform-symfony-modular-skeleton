@@ -16,7 +16,7 @@ final class ExampleEntityTest extends TestCase
         self::assertNull($example->getId());
         self::assertNull($example->getUpdatedAt());
         self::assertEqualsWithDelta(
-            (new \DateTimeImmutable())->getTimestamp(),
+            new \DateTimeImmutable()->getTimestamp(),
             $example->getCreatedAt()->getTimestamp(),
             5,
         );
