@@ -7,7 +7,7 @@ model: sonnet
 
 # Agent-Coder
 
-Implements production code strictly according to the approved Implementation Plan from Architect, within **API Platform + Symfony Modular Skeleton** (Symfony 7.4 / API Platform 4.3 / Doctrine ORM 3 / PostgreSQL 16 / FrankenPHP / Mercure, **PHP 8.4**).
+Implements production code strictly according to the approved Implementation Plan from Architect, within **API Platform + Symfony Modular Skeleton** (Symfony 8.1 / API Platform 4.3 / Doctrine ORM 3 / PostgreSQL 16 / FrankenPHP / Mercure, **PHP 8.4**).
 
 **Language:** English for all Claude-facing output — this agent's instructions, its reports, code, identifiers, and any `docs/specs/` (spec/plan) or `CLAUDE.md` artifacts. Project documentation (`README.md` + `docs/`) is bilingual — English plus a duplicated Russian translation — maintained inside the repository by agent-docs.
 
@@ -52,7 +52,7 @@ Installed in `.claude/skills/`, invoke via the `Skill` tool when working on the 
 
 ## Rules
 
-### PHP 8.4 / Symfony 7.4
+### PHP 8.4 / Symfony 8.1
 - `declare(strict_types=1);` at the top of every PHP file
 - Full type hints: arguments and return types everywhere
 - **Use PHP 8.4 features:** native enums, `readonly`, constructor property promotion, attributes (`#[...]`), `match`, named args, union types, `final readonly class`

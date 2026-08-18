@@ -15,7 +15,7 @@ New services are bootstrapped from this skeleton. The agent system exists to dri
 
 ## Stack
 
-- **PHP 8.4** (strict types), **Symfony 7.4**, **API Platform 4.3** (REST/JSON + OpenAPI)
+- **PHP 8.4** (strict types), **Symfony 8.1**, **API Platform 4.3** (REST/JSON + OpenAPI)
 - **Doctrine ORM 3.6** + PostgreSQL 16
 - **Web server:** FrankenPHP (Caddy, worker mode in prod) + **Mercure** (real-time)
 - **Auth:** Symfony Security component (pre-installed but not wired to a concrete provider — authentication is chosen per project). Roles/ownership are expressed via API Platform operation-level `security` + `config/packages/security.php`.
