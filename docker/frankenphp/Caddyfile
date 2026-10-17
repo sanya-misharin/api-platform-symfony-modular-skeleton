@@ -22,12 +22,23 @@
 	encode zstd br gzip
 
 	mercure {
+		# One hub instance per server address (SERVER_NAME lists several); equal names share the transport
+		name app
 		# Transport to use (default to Bolt)
-		transport_url {$MERCURE_TRANSPORT_URL:bolt:///data/mercure.db}
-		# Publisher JWT key
-		publisher_jwt {env.MERCURE_PUBLISHER_JWT_KEY} {env.MERCURE_PUBLISHER_JWT_ALG}
-		# Subscriber JWT key
-		subscriber_jwt {env.MERCURE_SUBSCRIBER_JWT_KEY} {env.MERCURE_SUBSCRIBER_JWT_ALG}
+		transport bolt {
+			path {$MERCURE_TRANSPORT_PATH:/data/mercure.db}
+		}
+		# Trusted token issuer: must match the "iss" claim minted by the app (MERCURE_JWT_ISSUER)
+		issuer {$MERCURE_JWT_ISSUER:https://localhost} {
+			# Publisher JWT key
+			publisher {
+				jwt {env.MERCURE_PUBLISHER_JWT_KEY} {env.MERCURE_PUBLISHER_JWT_ALG}
+			}
+			# Subscriber JWT key
+			subscriber {
+				jwt {env.MERCURE_SUBSCRIBER_JWT_KEY} {env.MERCURE_SUBSCRIBER_JWT_ALG}
+			}
+		}
 		# Allow anonymous subscribers (double-check that it's what you want)
 		anonymous
 		# Enable the subscription API (double-check that it's what you want)

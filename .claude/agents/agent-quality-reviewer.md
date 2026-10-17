@@ -49,7 +49,7 @@ Quality reviewer. Separate from `agent-mr-reviewer` and `agent-validator`: revie
 - Domain-meaningful mutations via intent-named entity methods, not bare setters
 - Modular config in `src/<Module>/*.php`, not leaking into global `config/`
 
-### PHP 8.4 / Symfony 7.4 compliance
+### PHP 8.4 / Symfony 8.1 compliance
 - `final readonly class` on services, processors, providers (not entities)
 - Constructor property promotion used
 - Native enums used (not class constants)

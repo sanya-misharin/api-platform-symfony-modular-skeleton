@@ -2,7 +2,7 @@
 
 # API Platform + Symfony Modular Skeleton
 
-🚀 Готовый к продакшену стартовый шаблон для создания модульных REST API бэкендов на **Symfony 7.4** и **API Platform 4.3**.
+🚀 Готовый к продакшену стартовый шаблон для создания модульных REST API бэкендов на **Symfony 8.1** и **API Platform 5.0**.
 
 ## ✨ Возможности
 
@@ -287,9 +287,9 @@ docker compose logs -f php
 ## 📋 Технологический стек
 
 - **PHP 8.4** со строгой типизацией
-- **Symfony 7.4** — фреймворк
-- **API Platform 4.3** — генерация REST API
-- **Doctrine ORM 3.6** — абстракция базы данных
+- **Symfony 8.1** — фреймворк
+- **API Platform 5.0** — генерация REST API
+- **Doctrine ORM 3.7** — абстракция базы данных
 - **PostgreSQL 16** — база данных
 - **FrankenPHP** — современный сервер приложений PHP
 - **Caddy** — веб-сервер с автоматическим HTTPS

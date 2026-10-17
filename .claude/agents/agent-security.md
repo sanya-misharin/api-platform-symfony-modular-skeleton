@@ -28,7 +28,7 @@ Security auditor for **API Platform + Symfony Modular Skeleton**. Checks changes
 - Does not change code
 
 ## Skills
-- `symfony:api-platform-security` — security expressions, voters, `securityPostValidation`, operation-level access control in API Platform 4.x; invoke via the `Skill` tool when auditing the ownership/roles/access_control rules below
+- `symfony:api-platform-security` — security expressions, voters, `securityPostValidation`, operation-level access control in API Platform 5.x; invoke via the `Skill` tool when auditing the ownership/roles/access_control rules below
 
 ## Inputs / Outputs
 **Accepts:** `Changed Files Summary` from Coder (read the diff via `git diff origin/main...HEAD` if needed)

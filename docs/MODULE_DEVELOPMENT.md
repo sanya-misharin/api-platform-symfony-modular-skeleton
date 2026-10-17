@@ -410,7 +410,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Api\YourModule;
 
-use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use ApiPlatform\Test\ApiTestCase;
 
 class YourEntityTest extends ApiTestCase
 {
