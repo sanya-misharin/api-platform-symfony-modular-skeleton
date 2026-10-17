@@ -13,6 +13,11 @@ return static function (ContainerConfigurator $container): void {
                 'jwt' => [
                     'secret' => '%env(MERCURE_JWT_SECRET)%',
                     'publish' => '*',
+                    'claims' => [
+                        'iss' => '%env(MERCURE_JWT_ISSUER)%',
+                        'sub' => 'api',
+                        'client_id' => 'api',
+                    ],
                 ],
             ],
         ],
